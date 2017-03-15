@@ -1,4 +1,3 @@
-package RCM;
 
 import javax.swing.*;
 import java.awt.*;
@@ -69,8 +68,8 @@ public class RCM extends JFrame{
 
             }
         });
-
         entryPane.add(b2);
+
         JButton b3 = new JButton("Paper");
         b3.addActionListener(new ActionListener() {
             @Override
@@ -80,13 +79,45 @@ public class RCM extends JFrame{
         });
         entryPane.add(b3);
 
+        JButton b4 = new JButton("Cardboard");
+        b4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        entryPane.add(b4);
+
+        JButton b5 = new JButton("Plastic Bottle");
+        b5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        entryPane.add(b5);
+
+        JButton b6 = new JButton("Wood");
+        b6.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        entryPane.add(b6);
+
         /* OUTPUT PANEL */
-        outputPane = new JPanel();
+                outputPane = new JPanel();
         outputPane.setPreferredSize(new Dimension(400, 500));
         outputPane.setBackground(Color.GREEN);
         container.add(outputPane, BorderLayout.EAST);
 
         //Labels
+        JLabel moneyLabel = new JLabel("$0.00");
+        Font moneyFont = new Font("Times New Roman", Font.BOLD, 20);
+        moneyLabel.setFont(moneyFont);
+        moneyLabel.setForeground(Color.YELLOW);
+        outputPane.add(moneyLabel);
 
         setLocationRelativeTo(null);
         setVisible(true);
