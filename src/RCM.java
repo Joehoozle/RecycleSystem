@@ -9,13 +9,12 @@ import java.awt.event.ActionListener;
  * Created by PJ on 3/8/2017.
  */
 public class RCM extends JFrame{
-    //Internal variables
-    private int maxWeight;
-    private int currentWeight;
-    private int maxMoney;
-    private int currentMoney;
-    private String place;
-    private String ID;
+    //Counters and counter labels
+    private int glassBottleCounter = 0;
+    private int aluminumCanCounter = 0;
+
+    private JLabel glassBottleLabel;
+    private JLabel aluminumCanLabel;
 
     //GUI Components
     private JPanel entryPane;
@@ -23,6 +22,7 @@ public class RCM extends JFrame{
     private JPanel recyclePanel;
     private JPanel moneyPanel;
     private JPanel dataPanel;
+    private JPanel optionPanel;
     private JButton recycleButton;
     private JButton b1, b2, b3, b4, b5 ,b6; //object option buttons
     private JLabel moneyLabel;
@@ -44,11 +44,49 @@ public class RCM extends JFrame{
         Container container = getContentPane();
         container.setLayout(new BorderLayout());
 
+        //Initializing button status for single recycling
+        recycleButton = new JButton();
+        recycleButton.setEnabled(false);
+
+        //Initializing labels for multiple recycling
+        glassBottleLabel = new JLabel("0");
+        aluminumCanLabel = new JLabel("0");
+
+        /* OPTION PANEL */
+        optionPanel = new JPanel();
+        optionPanel.setBorder(BorderFactory.createTitledBorder("Select Your Recycling Option"));
+        container.add(optionPanel, BorderLayout.NORTH);
+        JRadioButton single = new JRadioButton("Recycle One Item");
+        single.setSelected(true);
+        single.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                recycleButton.setEnabled(false);
+
+            }
+        });
+
+        JRadioButton multiple = new JRadioButton("Recycle Multiple Items");
+        multiple.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                recycleButton.setEnabled(true);
+            }
+        });
+
+        //button grouping
+        ButtonGroup bg = new ButtonGroup();
+        bg.add(single);
+        bg.add(multiple);
+        optionPanel.add(single);
+        optionPanel.add(multiple);
+
         /* ENTRY PANEL */
         entryPane = new JPanel();
         entryPane.setLayout(new GridLayout(3, 2, 200, 200));
-        entryPane.setPreferredSize(new Dimension(960, 1080));
+        entryPane.setPreferredSize(new Dimension(958, 1080));
         entryPane.setBackground(Color.decode("#00BCD4"));
+        entryPane.setBorder(BorderFactory.createTitledBorder("Select Your Item(s)"));
         container.add(entryPane, BorderLayout.WEST);
 
         //Object buttons in Entry
@@ -57,7 +95,13 @@ public class RCM extends JFrame{
         b1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                if(single.isSelected()){
+                    //recycle single item
+                }
+                else{
+                    glassBottleCounter++;
+                    glassBottleLabel.setText(String.valueOf(glassBottleCounter));
+                }
             }
         });
         entryPane.add(b1);
@@ -66,12 +110,19 @@ public class RCM extends JFrame{
         b2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if(single.isSelected()){
 
+                }
+                else{
+                    aluminumCanCounter++;
+                    aluminumCanLabel.setText(String.valueOf(aluminumCanCounter));
+                }
             }
         });
         entryPane.add(b2);
 
-        b3 = new JButton("Paper");
+        b3 = new JButton("");
+        b3.setVisible(false);
         b3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -117,8 +168,9 @@ public class RCM extends JFrame{
         //Money subpanel
         moneyPanel = new JPanel();
         moneyPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        moneyPanel.setBackground(Color.decode("#00BCD4"));
         moneyLabel = new JLabel("$0.00");
-        Font moneyFont = new Font("Times New Roman", Font.BOLD, 30);
+        Font moneyFont = new Font("Money", Font.BOLD, 30);
         moneyLabel.setFont(moneyFont);
         moneyLabel.setForeground(Color.YELLOW);
         moneyPanel.add(moneyLabel);
@@ -130,9 +182,9 @@ public class RCM extends JFrame{
         dataPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         dataPanel.setLayout(new GridLayout(6, 2));
         dataPanel.add(new JLabel("Glass Bottles:"));
-        dataPanel.add(new JLabel("0"));
+        dataPanel.add(glassBottleLabel);
         dataPanel.add(new JLabel("Aluminum Cans:"));
-        dataPanel.add(new JLabel("0"));
+        dataPanel.add(aluminumCanLabel);
         dataPanel.add(new JLabel("Paper:"));
         dataPanel.add(new JLabel("0"));
         dataPanel.add(new JLabel("Cardboard:"));
@@ -147,11 +199,12 @@ public class RCM extends JFrame{
 
         //Recycle subpanel
         recyclePanel = new JPanel();
+        recyclePanel.setBackground(Color.decode("#00BCD4"));
         recyclePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         outputPane.add(recyclePanel, BorderLayout.SOUTH);
 
         //Main button code for recycle subpanel
-        recycleButton = new JButton("Recycle");
+        recycleButton.setText("RECYCLE");
         recycleButton.setPreferredSize(new Dimension(150, 50));
         recycleButton.addActionListener(new ActionListener(){
             @Override
@@ -164,34 +217,6 @@ public class RCM extends JFrame{
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
-    }
-    //////////////// GETTERS AND SETTERS //////////////////////
-    public int getCurrentWeight() {
-        return currentWeight;
-    }
-
-    public int getCurrentMoney() {
-        return currentMoney;
-    }
-
-    public void setCurrentMoney(int currentMoney) {
-        this.currentMoney = currentMoney;
-    }
-
-    public String getPlace() {
-        return place;
-    }
-
-    public void setPlace(String place) {
-        this.place = place;
-    }
-
-    public String getID() {
-        return ID;
-    }
-
-    public void setID(String ID) {
-        this.ID = ID;
     }
 
     ////////////////////// OPERATION METHODS //////////////////////
