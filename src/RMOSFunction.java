@@ -1,0 +1,166 @@
+import java.lang.reflect.Array;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+/**
+ * Created by dantedg on 3/14/2017.
+ */
+public class RMOSFunction {
+    ArrayList<RCMFunction> RCMList;
+    ArrayList<RecyclableItem> activeRecyclableItems;
+    HashMap<String,Double> recyclableItemPrices;
+
+    public RMOSFunction() {
+        RCMList = new ArrayList<RCMFunction>();
+        activeRecyclableItems = new ArrayList<RecyclableItem>();
+        recyclableItemPrices = new HashMap<String, Double>();
+    }
+    /////////////Database Statistics\\\\\\\\\\\\\
+    public void setupStatistics(String RCMId) {
+        Connection con = null;
+        try {
+            String URL = "jdbc:sqlite:C:\\Users\\dantedg\\Documents\\ClassFiles\\ObjectOriented\\RecycleSystem\\RCMdata";
+            con = DriverManager.getConnection(URL);
+            System.out.print("Got connected!");
+            String query = "CREATE TABLE IF NOT EXISTS RCMTransactions (" +
+                    "id INTEGER PRIMARY KEY," +
+                    "RCMId INTEGER," +
+                    "sale TEXT," +
+                    "material TEXT," +
+                    "weight REAL," +
+                    "timeStamp CURRENT_TIMESTAMP," +
+                    "emptyFlag INTEGER );";
+            Statement statement = con.createStatement();
+            statement.execute(query);
+            System.out.println("Table was created alright");
+        } catch(SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (con != null) {
+                    System.out.print("Closing");
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+    }
+
+    public String getAllEntries() {
+        Connection con = null;
+        try {
+            String URL = "jdbc:sqlite:C:\\Users\\dantedg\\Documents\\ClassFiles\\ObjectOriented\\RecycleSystem\\RCMdata";
+            con = DriverManager.getConnection(URL);
+            System.out.print("Got connected!");
+            String query = "SELECT * FROM RCMTransactions;";
+            Statement statement = con.createStatement();
+            ResultSet result = statement.executeQuery(query);
+            System.out.println("Table was created alright");
+        } catch(SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (con != null) {
+                    System.out.print("Closing");
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+    }
+
+    //////////RCM Manipulation\\\\\\\\\\\\\\
+    private void updateRCMList() {
+
+    }
+
+    public int getRCMNumber() {
+        return RCMList.size();
+    }
+
+    public String getRCMId(int i) {
+        return RCMList.get(i).getID();
+    }
+
+    public String getRCMName(int i) {
+        return RCMList.get(i).toString();
+    }
+
+    public void addRCM(RCMFunction rcm) {
+        RCMList.add(rcm);
+    }
+
+    public String getRCMLocation(int i) {
+        return RCMList.get(i).getLocation();
+    }
+
+    public String getRCMID(int i) {
+        return RCMList.get(i).getID();
+    }
+
+    public String getRCMCapacity(int i) {
+        return Double.toString(RCMList.get(i).getCapacity());
+    }
+
+    public void editRCMCapacity(int i,double capacity) {
+        RCMList.get(i).setCapacity(capacity);
+    }
+
+    public String getRCMWeight(int i) {
+        return Double.toString(RCMList.get(i).getWeight());
+    }
+
+    public USMoney getRCMMoney(int i) {
+        return RCMList.get(i).getCurrentMoney();
+    }
+
+    public void editRCMMoney(USMoney money) {
+
+    }
+
+    public void empty(int i) {
+        RCMList.get(i).empty();
+    }
+
+    /////////////Item Manipulation\\\\\\\\\\\\\\\
+    public int getActiveItemNumber() {
+        return activeRecyclableItems.size();
+    }
+
+    public String getActiveItemName(int i) {
+        return activeRecyclableItems.get(i).toString();
+    }
+
+    public void addItem(String string) {
+        activeRecyclableItems.add(new RecyclableItem(string));
+    }
+
+    public void deleteItem(int i) {
+        activeRecyclableItems.remove(i);
+    }
+
+    public void editItemPrice(int i) {
+
+    }
+
+
+    public String getNumberOfItems(int i) {
+        return Integer.toString(RCMList.get(i).getNumItems());
+    }
+
+
+
+
+
+    public void test() {
+        ArrayList<RecyclableItem> items = new ArrayList<RecyclableItem>();
+        items.add(new RecyclableItem("glass"));
+        ArrayList<String> sales = new ArrayList<String>();
+        sales.add("$4.32");
+        RCMList.get(1).logTransaction(items,sales);
+    }
+
+}
