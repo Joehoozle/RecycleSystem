@@ -17,7 +17,7 @@ public class RMOSFunction {
         recyclableItemPrices = new HashMap<String, Double>();
     }
     /////////////Database Statistics\\\\\\\\\\\\\
-    public void setupStatistics(String RCMId) {
+    public void setupStatistics() {
         Connection con = null;
         try {
             String URL = "jdbc:sqlite:C:\\Users\\dantedg\\Documents\\ClassFiles\\ObjectOriented\\RecycleSystem\\RCMdata";
@@ -29,7 +29,7 @@ public class RMOSFunction {
                     "sale TEXT," +
                     "material TEXT," +
                     "weight REAL," +
-                    "timeStamp CURRENT_TIMESTAMP," +
+                    "timeStamp DateTime DEFAULT CURRENT_TIMESTAMP," +
                     "emptyFlag INTEGER );";
             Statement statement = con.createStatement();
             statement.execute(query);
@@ -50,14 +50,19 @@ public class RMOSFunction {
 
     public String getAllEntries() {
         Connection con = null;
+        ResultSet result = null;
+        String ID ="";
         try {
             String URL = "jdbc:sqlite:C:\\Users\\dantedg\\Documents\\ClassFiles\\ObjectOriented\\RecycleSystem\\RCMdata";
             con = DriverManager.getConnection(URL);
             System.out.print("Got connected!");
             String query = "SELECT * FROM RCMTransactions;";
             Statement statement = con.createStatement();
-            ResultSet result = statement.executeQuery(query);
+            result = statement.executeQuery(query);
             System.out.println("Table was created alright");
+            if (result.next()) {
+                ID = result.getString("sale");
+            }
         } catch(SQLException e) {
             e.printStackTrace();
         } finally {
@@ -70,6 +75,7 @@ public class RMOSFunction {
                 System.out.println(ex.getMessage());
             }
         }
+        return ID;
     }
 
     //////////RCM Manipulation\\\\\\\\\\\\\\

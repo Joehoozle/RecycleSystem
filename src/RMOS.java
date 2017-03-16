@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Created by Dante on 3/8/2017.
@@ -24,10 +26,7 @@ public class RMOS extends JFrame {
     //RCM Control menu items
     private JPanel RCMPanel;
     private JComboBox<String> RCMList;
-//    private JButton RCMChangeButton;
-//    private JLabel chooseRCM;
     private JLabel RCMLabel;
-//    private JLabel RCMStatus;
     private JLabel RCMInformation;
     private JButton RCMTurnOn; //TODO: Add functionality for on and off
     private JButton RCMTurnOff;
@@ -156,24 +155,24 @@ public class RMOS extends JFrame {
 
         Container container = getContentPane();
         container.setLayout(new GridLayout(1,4,20,0));
-        container.setBackground(Color.decode("#B388FF"));
+//        container.setBackground(Color.decode("#B388FF"));
 
         panel1.setLayout(new GridBagLayout());
-        panel1.setBackground(Color.decode("#B388FF"));
+//        panel1.setBackground(Color.decode("#B388FF"));
         panel2.setLayout(new GridBagLayout());
-        panel2.setBackground(Color.decode("#B388FF"));
+//        panel2.setBackground(Color.decode("#B388FF"));
         panel3.setLayout(new GridBagLayout());
         panel3.setOpaque(true);
-        panel3.setBackground(Color.decode("#B388FF"));
+//        panel3.setBackground(Color.decode("#B388FF"));
         panel4.setLayout(new GridBagLayout());
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.VERTICAL;
 
-        RCMPanel.setBackground(Color.decode("#00BCD4"));
-        GraphPanel.setBackground(Color.decode("#00BCD4"));
-        StatisticPanel.setBackground(Color.decode("#00BCD4"));
-        ControlPanel.setBackground(Color.decode("#B39DDB"));
+        RCMPanel.setBackground(Color.decode("#A9A9A9"));
+        GraphPanel.setBackground(Color.decode("#A9A9A9"));
+        StatisticPanel.setBackground(Color.decode("#A9A9A9"));
+        ControlPanel.setBackground(Color.decode("#A9A9A9"));
 
         // Set up the size of panel 1 with constraints
         constraints.weightx = 0.15;
@@ -474,24 +473,27 @@ public class RMOS extends JFrame {
             }
         });
 
-//        RCMChangeButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                updateRCMInformation(RCMList.getSelectedIndex());
-//            }
-//        });
-
         RCMTurnOn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                RCMTurnOn.setEnabled(false);
+                RCMTurnOff.setEnabled(true);
+                RCMNewCapacity.setEnabled(true);
+                RCMChangeCapacityButton.setEnabled(true);
+                RCMChangeMoneyButton.setEnabled(true);
+                RCMEmpty.setEnabled(true);
             }
         });
 
         RCMTurnOff.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                RCMTurnOn.setEnabled(true);
+                RCMTurnOff.setEnabled(false);
+                RCMNewCapacity.setEnabled(false);
+                RCMChangeCapacityButton.setEnabled(false);
+                RCMChangeMoneyButton.setEnabled(false);
+                RCMEmpty.setEnabled(false);
             }
         });
 
@@ -521,16 +523,18 @@ public class RMOS extends JFrame {
         updateStatsList.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mRMOS.setupStatistics("2");
+                mRMOS.setupStatistics();
                 updateRCMComboBoxes();
             }
         });
 
+        //TODO: Fix, as we are using this to test
         addRCMButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 //                mRMOS.addRCM(new RCMFunction());
-                mRMOS.test();
+//                mRMOS.test();
+                postEverything();
             }
         });
 
@@ -605,6 +609,22 @@ public class RMOS extends JFrame {
     }
 //functions to add/edit items
 
+    //functions to pull statistic data
+    public void postEverything() {
+        mRMOS.setupStatistics();
+        String string = mRMOS.getAllEntries();
+//        ResultSet result = mRMOS.getAllEntries();
+//        try {
+//            if (result.next()) {
+//                String ID = result.getString("RCMId");
+//                statsList.setText(ID);
+//            }
+//        } catch(SQLException e) {
+//            e.printStackTrace();
+//            statsList.setText("Sorry :(");
+//        }
+        statsList.setText(string);
+    }
 
 //-------------------------------------------------
     public static void main(String[] args) {
