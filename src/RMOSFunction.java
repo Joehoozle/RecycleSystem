@@ -2,11 +2,12 @@ import java.lang.reflect.Array;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Observable;
 
 /**
  * Created by dantedg on 3/14/2017.
  */
-public class RMOSFunction {
+public class RMOSFunction extends Observable{
     ArrayList<RCMFunction> RCMList;
     ArrayList<RecyclableItem> activeRecyclableItems;
     HashMap<String,Double> recyclableItemPrices;

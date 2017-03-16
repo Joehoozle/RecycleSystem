@@ -84,7 +84,11 @@ public class USMoney {
 
     @Override
     public String toString() {
-        String string = "$" + Integer.toString(dollars) + "." + Integer.toString(cents);
+        String string;
+        if(cents < 10)
+            string = "$" + Integer.toString(dollars) + ".0" + Integer.toString(cents);
+        else
+            string = "$" + Integer.toString(dollars) + "." + Integer.toString(cents);
         return string;
     }
 }

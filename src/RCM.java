@@ -5,36 +5,42 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Observer;
 
 /**
  * Class RCM
  * Created by pjaffurs on 3/8/2017.
  */
 public class RCM extends JFrame{
-    //Counters and counter labels
+    //Counters and operation variables
     private USMoney tmpMoney;
     private int glassBottleCounter = 0;
     private int aluminumCanCounter = 0;
 
-    private JLabel glassBottleLabel;
-    private JLabel aluminumCanLabel;
-
     //RCM Method driver
-    private RCMFunction func;
+    private RCMFunction mRCM;
 
     //ArrayList to store items to be recycled
+    //TODO: use arraylist of recyclables to build UI as used
     protected ArrayList<RecyclableItem> list = new ArrayList<>();
 
     //GUI Components
+    private JPanel headerPanel;
+    private JPanel optionPanel;
     private JPanel entryPane;
     private JPanel outputPane;
     private JPanel recyclePanel;
     private JPanel moneyPanel;
     private JPanel dataPanel;
-    private JPanel optionPanel;
+
     private JButton recycleButton;
     private JButton b1, b2, b3, b4, b5 ,b6; //object option buttons
+
+    private JLabel title;
     private JLabel moneyLabel;
+    private JLabel counterLabel1, counterLabel2, counterLabel3, counterLabel4, counterLabel5, counterLabel6;
+    private JLabel dataLabel1, dataLabel2, dataLabel3, dataLabel4, dataLabel5, dataLabel6;
+
 
     /////////////////////// CONSTRUCTOR /////////////////////////
     public RCM(String location, String ID, int capacity){
@@ -53,23 +59,36 @@ public class RCM extends JFrame{
         Container container = getContentPane();
         container.setLayout(new BorderLayout());
 
-        func = new RCMFunction(location, ID, capacity);
+        mRCM = new RCMFunction(location, ID, capacity);
+        tmpMoney = new USMoney(0,0);
         Font titleFont = new Font("Title", Font.PLAIN, 20);
-        Font entryFont = new Font("Entry", Font.PLAIN, 25);
+        Font entryFont = new Font("Entry", Font.PLAIN, 30);
 
         //Initializing button status for single recycling
         recycleButton = new JButton();
         recycleButton.setEnabled(false);
 
         //Initializing labels for multiple recycling
-        glassBottleLabel = new JLabel("0");
-        aluminumCanLabel = new JLabel("0");
+        counterLabel1 = new JLabel("0");
+        counterLabel2 = new JLabel("0");
+        counterLabel3 = new JLabel("0");
+        counterLabel4 = new JLabel("0");
+        counterLabel5 = new JLabel("0");
+        counterLabel6 = new JLabel("0");
 
-        /* OPTION PANEL */
+        /* HEADER PANEL */
+        headerPanel = new JPanel();
+        headerPanel.setLayout(new BorderLayout());
+        container.add(headerPanel, BorderLayout.NORTH);
+
+        title = new JLabel("RCM " + ID + ", " + location);
+        title.setFont(titleFont);
+        headerPanel.add(title);
         optionPanel = new JPanel();
         optionPanel.setBorder(BorderFactory.createTitledBorder(null,"Select Your Recycling Option",
                 TitledBorder.CENTER, TitledBorder.TOP, titleFont));
-        container.add(optionPanel, BorderLayout.NORTH);
+        headerPanel.add(optionPanel, BorderLayout.SOUTH);
+
         JRadioButton single = new JRadioButton("Recycle One Item");
         single.setSelected(true);
         single.setFont(entryFont);
@@ -116,12 +135,12 @@ public class RCM extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(single.isSelected()){
-                    func.recycle();
+                    mRCM.recycle();
                 }
                 else{
                     glassBottleCounter++;
-                    glassBottleLabel.setText(String.valueOf(glassBottleCounter));
-                    func.recycle();
+                    counterLabel1.setText(String.valueOf(glassBottleCounter));
+                    mRCM.recycle();
                 }
             }
         });
@@ -137,7 +156,7 @@ public class RCM extends JFrame{
                 }
                 else{
                     aluminumCanCounter++;
-                    aluminumCanLabel.setText(String.valueOf(aluminumCanCounter));
+                    counterLabel2.setText(String.valueOf(aluminumCanCounter));
                 }
             }
         });
@@ -192,13 +211,15 @@ public class RCM extends JFrame{
         outputPane.setLayout(new BorderLayout());
         outputPane.setPreferredSize(new Dimension(960, 1080));
         outputPane.setBackground(Color.decode("#00BCD4"));
+        outputPane.setBorder(BorderFactory.createTitledBorder(null,"Session Information",
+                TitledBorder.CENTER, TitledBorder.TOP, titleFont));
         container.add(outputPane, BorderLayout.EAST);
 
         //Money subpanel
         moneyPanel = new JPanel();
         moneyPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         moneyPanel.setBackground(Color.decode("#00BCD4"));
-        moneyLabel = new JLabel("$0.00");
+        moneyLabel = new JLabel(tmpMoney.toString());
         Font moneyFont = new Font("Money", Font.BOLD, 45);
         moneyLabel.setFont(moneyFont);
         moneyLabel.setForeground(Color.YELLOW);
@@ -211,17 +232,17 @@ public class RCM extends JFrame{
         dataPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         dataPanel.setLayout(new GridLayout(6, 2));
         dataPanel.add(new JLabel("Glass Bottles:"));
-        dataPanel.add(glassBottleLabel);
+        dataPanel.add(counterLabel1);
         dataPanel.add(new JLabel("Aluminum Cans:"));
-        dataPanel.add(aluminumCanLabel);
+        dataPanel.add(counterLabel2);
         dataPanel.add(new JLabel("Paper:"));
-        dataPanel.add(new JLabel("0"));
+        dataPanel.add(counterLabel3);
         dataPanel.add(new JLabel("Cardboard:"));
-        dataPanel.add(new JLabel("0"));
+        dataPanel.add(counterLabel4);
         dataPanel.add(new JLabel("Plastic Bottles:"));
-        dataPanel.add(new JLabel("0"));
+        dataPanel.add(counterLabel5);
         dataPanel.add(new JLabel("Wood:"));
-        dataPanel.add(new JLabel("0"));
+        dataPanel.add(counterLabel6);
 
 
         outputPane.add(dataPanel, BorderLayout.CENTER);
@@ -234,11 +255,12 @@ public class RCM extends JFrame{
 
         //Main button code for recycle subpanel
         recycleButton.setText("RECYCLE");
-        recycleButton.setPreferredSize(new Dimension(150, 50));
+        Font recycleFont = new Font("Recycle",Font.BOLD, 40);
+        recycleButton.setFont(recycleFont);
         recycleButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-
+                mRCM.recycle();
             }
         });
         recyclePanel.add(recycleButton, BorderLayout.SOUTH);
@@ -249,7 +271,7 @@ public class RCM extends JFrame{
     }
 
     ////////////////////// OPERATION METHODS //////////////////////
-
+    //public void update()
     ////////////////////////// MAIN ////////////////////////////
     public static void main(String[] args){
         new RCM("Library","0",100);
