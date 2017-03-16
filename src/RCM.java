@@ -5,17 +5,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Observable;
 import java.util.Observer;
 
 /**
  * Class RCM
  * Created by pjaffurs on 3/8/2017.
  */
-public class RCM extends JFrame{
+public class RCM extends JFrame implements Observer{
     //Counters and operation variables
     private USMoney tmpMoney;
-    private int glassBottleCounter = 0;
-    private int aluminumCanCounter = 0;
 
     //RCM Method driver
     private RCMFunction mRCM;
@@ -26,6 +25,7 @@ public class RCM extends JFrame{
 
     //GUI Components
     private JPanel headerPanel;
+    private JPanel titlePanel;
     private JPanel optionPanel;
     private JPanel entryPane;
     private JPanel outputPane;
@@ -34,13 +34,13 @@ public class RCM extends JFrame{
     private JPanel dataPanel;
 
     private JButton recycleButton;
-    private JButton b1, b2, b3, b4, b5 ,b6; //object option buttons
+    private JButton[] objectButtons; //object option buttons
+    private int[] objectCounters;
+    private JLabel[] objectLabels;
+    private JLabel[] counterLabels;
 
     private JLabel title;
     private JLabel moneyLabel;
-    private JLabel counterLabel1, counterLabel2, counterLabel3, counterLabel4, counterLabel5, counterLabel6;
-    private JLabel dataLabel1, dataLabel2, dataLabel3, dataLabel4, dataLabel5, dataLabel6;
-
 
     /////////////////////// CONSTRUCTOR /////////////////////////
     public RCM(String location, String ID, int capacity){
@@ -68,22 +68,23 @@ public class RCM extends JFrame{
         recycleButton = new JButton();
         recycleButton.setEnabled(false);
 
-        //Initializing labels for multiple recycling
-        counterLabel1 = new JLabel("0");
-        counterLabel2 = new JLabel("0");
-        counterLabel3 = new JLabel("0");
-        counterLabel4 = new JLabel("0");
-        counterLabel5 = new JLabel("0");
-        counterLabel6 = new JLabel("0");
+        //Initializing button and counter arrays
+        objectButtons = new JButton[6];
+        objectCounters = new int[6];
+        objectLabels = new JLabel[6];
+        counterLabels = new JLabel[6];
 
         /* HEADER PANEL */
         headerPanel = new JPanel();
         headerPanel.setLayout(new BorderLayout());
         container.add(headerPanel, BorderLayout.NORTH);
 
+        titlePanel = new JPanel();
+        titlePanel.setBackground(Color.decode("#00BCD4"));
         title = new JLabel("RCM " + ID + ", " + location);
-        title.setFont(titleFont);
-        headerPanel.add(title);
+        title.setFont(entryFont);
+        titlePanel.add(title);
+        headerPanel.add(titlePanel, BorderLayout.NORTH);
         optionPanel = new JPanel();
         optionPanel.setBorder(BorderFactory.createTitledBorder(null,"Select Your Recycling Option",
                 TitledBorder.CENTER, TitledBorder.TOP, titleFont));
@@ -127,84 +128,31 @@ public class RCM extends JFrame{
         entryPane.setFont(entryFont);
         container.add(entryPane, BorderLayout.WEST);
 
-        //Object buttons in Entry
-        //TODO: make buttons function, need to increment variables per recyclable type
-        b1 = new JButton("Glass Bottle");
-        b1.setFont(entryFont);
-        b1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(single.isSelected()){
-                    mRCM.recycle();
+        //Loop to activate a set of 4 arrays: two of panels, one of buttons, one of ints
+        for(int i = 0; i < 6; i++){
+            final int tmp = i;
+            objectCounters[i] = 0;
+            objectButtons[i] = new JButton("");
+            objectLabels[i] = new JLabel("");
+            counterLabels[i] = new JLabel("0");
+            objectButtons[i].setFont(entryFont);
+            objectButtons[tmp].addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JButton button = (JButton) e.getSource();
+                    if(single.isSelected()){
+                        mRCM.recycle();
+                    }
+                    else{
+                        objectCounters[tmp]++;
+                        counterLabels[tmp].setText(String.valueOf(objectCounters[tmp]));
+                        mRCM.recycle();
+                    }
                 }
-                else{
-                    glassBottleCounter++;
-                    counterLabel1.setText(String.valueOf(glassBottleCounter));
-                    mRCM.recycle();
-                }
-            }
-        });
-        entryPane.add(b1);
-
-        b2 = new JButton("Aluminum Can");
-        b2.setFont(entryFont);
-        b2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(single.isSelected()){
-
-                }
-                else{
-                    aluminumCanCounter++;
-                    counterLabel2.setText(String.valueOf(aluminumCanCounter));
-                }
-            }
-        });
-        entryPane.add(b2);
-
-        b3 = new JButton("");
-        b3.setFont(entryFont);
-        b3.setVisible(false);
-        b3.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-        entryPane.add(b3);
-
-        b4 = new JButton("Cardboard");
-        b4.setFont(entryFont);
-        b4.setVisible(false);
-        b4.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-        entryPane.add(b4);
-
-        b5 = new JButton("Plastic Bottle");
-        b5.setFont(entryFont);
-        b5.setVisible(false);
-        b5.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-        entryPane.add(b5);
-
-        b6 = new JButton("Wood");
-        b6.setFont(entryFont);
-        b6.setVisible(false);
-        b6.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-        entryPane.add(b6);
+            });
+            objectButtons[i].setVisible(false);
+            entryPane.add(objectButtons[i]);
+        }
 
         /* OUTPUT PANEL */
         outputPane = new JPanel();
@@ -227,22 +175,18 @@ public class RCM extends JFrame{
         outputPane.add(moneyPanel, BorderLayout.NORTH);
 
         //Data subpanel
-        //TODO: set counters for numerical label fields
         dataPanel = new JPanel();
         dataPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         dataPanel.setLayout(new GridLayout(6, 2));
-        dataPanel.add(new JLabel("Glass Bottles:"));
-        dataPanel.add(counterLabel1);
-        dataPanel.add(new JLabel("Aluminum Cans:"));
-        dataPanel.add(counterLabel2);
-        dataPanel.add(new JLabel("Paper:"));
-        dataPanel.add(counterLabel3);
-        dataPanel.add(new JLabel("Cardboard:"));
-        dataPanel.add(counterLabel4);
-        dataPanel.add(new JLabel("Plastic Bottles:"));
-        dataPanel.add(counterLabel5);
-        dataPanel.add(new JLabel("Wood:"));
-        dataPanel.add(counterLabel6);
+        //goes through arrays of labels to add to grid
+        for(int i = 0;i < 6;i++){
+            objectLabels[i].setFont(titleFont);
+            objectLabels[i].setVisible(false);
+            dataPanel.add(objectLabels[i]);
+            counterLabels[i].setFont(titleFont);
+            counterLabels[i].setVisible(false);
+            dataPanel.add(counterLabels[i]);
+        }
 
 
         outputPane.add(dataPanel, BorderLayout.CENTER);
@@ -265,13 +209,46 @@ public class RCM extends JFrame{
         });
         recyclePanel.add(recycleButton, BorderLayout.SOUTH);
 
+        list.add(new RecyclableItem("glass"));
+        list.add(new RecyclableItem("aluminum"));
+        parseActiveItems(list);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
     }
 
     ////////////////////// OPERATION METHODS //////////////////////
-    //public void update()
+    public void update(Observable ob, Object object){
+        ArrayList<RecyclableItem> available = (ArrayList<RecyclableItem>) object;
+
+        parseActiveItems(available);
+    }
+
+    /**
+     * parseActiveItems()
+     * Parses the ArrayList of items, activating and initializing
+     * buttons, counters, and labels if that value exists. If not,
+     * they are hidden from view.
+     * @param list      list of items accepted by RCMs
+     */
+    public void parseActiveItems(ArrayList<RecyclableItem> list){
+        for(int i = 0; i < 6;i++) {
+            if (i >= list.size()) {
+                objectButtons[i].setVisible(false);
+                objectLabels[i].setVisible(false);
+                counterLabels[i].setVisible(false);
+            }
+            else {
+                objectCounters[i] = 0;
+                objectButtons[i].setText(list.get(i).getMaterialType());
+                objectButtons[i].setVisible(true);
+                objectLabels[i].setText(list.get(i).getMaterialType());
+                objectLabels[i].setVisible(true);
+                counterLabels[i].setText("0");
+                counterLabels[i].setVisible(true);
+            }
+        }
+    }
     ////////////////////////// MAIN ////////////////////////////
     public static void main(String[] args){
         new RCM("Library","0",100);

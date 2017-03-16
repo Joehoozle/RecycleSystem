@@ -143,10 +143,12 @@ public class RMOSFunction extends Observable{
 
     public void addItem(String string) {
         activeRecyclableItems.add(new RecyclableItem(string));
+        notifyObservers(activeRecyclableItems);
     }
 
     public void deleteItem(int i) {
         activeRecyclableItems.remove(i);
+        notifyObservers(activeRecyclableItems);
     }
 
     public void editItemPrice(int i) {
