@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class RCMFunction {
     private double capacity;
     private double weight;
+    private USMoney maxMoney;
     private USMoney currentMoney;
     private String location;
     private String ID;
@@ -45,6 +46,8 @@ public class RCMFunction {
         this.weight = weight;
     }
 
+    public USMoney getMaxMoney(){ return maxMoney; }
+
     public USMoney getCurrentMoney() {
         return currentMoney;
     }
@@ -79,10 +82,13 @@ public class RCMFunction {
         weight = 0;
     }
 
+    public void refillMoney() { currentMoney = maxMoney; }
+
     //What gets called when an item gets recycled
-//    public void recycle() {
-//        numItems++;
-//    }
+    public void recycle() {
+        numItems++;
+        //RCMTransaction.post()
+    }
 
     public void logTransaction(ArrayList<RecyclableItem> items, ArrayList<String> sales) {
         RecyclableItem item;
