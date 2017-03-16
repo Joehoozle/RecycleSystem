@@ -12,13 +12,14 @@ public class RCMFunction {
     private String ID;
     private int numItems;
 
-    public RCMFunction(String location, String ID, int capacity) {
+    public RCMFunction(String location, String ID, int capacity, USMoney maxMoney) {
         this.location = location;
         this.ID = ID;
         this.capacity = capacity;
         weight = 0;
         numItems = 0;
         currentMoney = new USMoney(0,0);
+        this.maxMoney = maxMoney;
     }
 
     /////////Getters and Setters\\\\\\\\\

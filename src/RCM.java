@@ -58,8 +58,12 @@ public class RCM extends JFrame implements Observer{
         Container container = getContentPane();
         container.setLayout(new BorderLayout());
 
-        mRCM = new RCMFunction(location, ID, capacity);
+//<<<<<<< Updated upstream
+//        mRCM = new RCMFunction(location, ID, capacity);
         tmpMoney = new USMoney(0,0);
+//=======
+//        func = new RCMFunction(location, ID, capacity);
+//>>>>>>> Stashed changes
         Font titleFont = new Font("Title", Font.PLAIN, 20);
         Font entryFont = new Font("Entry", Font.PLAIN, 30);
 

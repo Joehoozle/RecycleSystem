@@ -124,8 +124,8 @@ public class RMOSFunction extends Observable{
         return RCMList.get(i).getCurrentMoney();
     }
 
-    public void editRCMMoney(USMoney money) {
-
+    public void editRCMMoney(USMoney money, int i) {
+        RCMList.get(i).setCurrentMoney(money);
     }
 
     public void empty(int i) {
@@ -151,11 +151,9 @@ public class RMOSFunction extends Observable{
         notifyObservers(activeRecyclableItems);
     }
 
-    public void editItemPrice(int i) {
+    public void editItemPrice(int i, USMoney price) {
 
     }
-
-
     public String getNumberOfItems(int i) {
         return Integer.toString(RCMList.get(i).getNumItems());
     }
