@@ -20,8 +20,7 @@ public class RCM extends JFrame implements Observer{
     private RCMFunction mRCM;
 
     //ArrayList to store items to be recycled
-    //TODO: use arraylist of recyclables to build UI as used
-    protected ArrayList<RecyclableItem> list = new ArrayList<>();
+    private ArrayList<RecyclableItem> list = new ArrayList<>();
 
     //GUI Components
     private JPanel headerPanel;
@@ -209,8 +208,6 @@ public class RCM extends JFrame implements Observer{
         });
         recyclePanel.add(recycleButton, BorderLayout.SOUTH);
 
-        list.add(new RecyclableItem("glass"));
-        list.add(new RecyclableItem("aluminum"));
         parseActiveItems(list);
         pack();
         setLocationRelativeTo(null);
