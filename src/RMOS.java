@@ -763,8 +763,8 @@ public class RMOS extends JFrame {
 
     //functions to pull statistic data
     public void postEverything() {
-        mRMOS.setupStatistics();
-        mRMOS.getAllEntries();
+        //mRMOS.setupStatistics();
+        //mRMOS.getAllEntries();
     }
 }
 

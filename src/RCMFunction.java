@@ -114,6 +114,7 @@ public class RCMFunction{
     public USMoney recycle(ArrayList<RecyclableItem> recyclables) {
         double tmpWeight;
         double sumWeight = 0;
+        USMoney coupon = new USMoney(0,0);
         USMoney tmpCost;
         USMoney sumCost = new USMoney(0, 0);
         for(RecyclableItem tmp : recyclables){
@@ -122,7 +123,10 @@ public class RCMFunction{
             tmpCost = recyclableItemPrices.get(tmp.getMaterialType()).calculateCost(tmpWeight);
 
             if(currentMoney.getDouble() - tmpCost.getDouble() < 0){
-                break;
+                RCMTransaction.post(tmpCost.toString(), ID, tmpWeight, tmp.getMaterialType(), 0);
+                sumWeight += tmpWeight;
+                coupon.add(tmpCost);
+                continue;
             }
             RCMTransaction.post(tmpCost.toString(), ID, tmpWeight, tmp.getMaterialType(), 0);
             sumWeight += tmpWeight;
@@ -133,8 +137,15 @@ public class RCMFunction{
         double val = (currentMoney.getDouble() - sumCost.getDouble()) * 100;
         currentMoney.setDollars(0);
         currentMoney.setCents((int)val);
-        JOptionPane.showMessageDialog(null,
-                "Recycling Success! Dispensing " + sumCost.toString() + "!");
+        if(coupon.getDollars() == 0 && coupon.getCents() == 0) {
+            JOptionPane.showMessageDialog(null,
+                    "Recycling Success! Dispensing " + sumCost.toString() + "!");
+        }
+        else{
+            JOptionPane.showMessageDialog(null,
+                    "Recycling Success! Dispensing " + sumCost.toString() + " and " +
+                            "printing voucher for " + coupon.toString() + "!");
+        }
         return sumCost;
     }
 

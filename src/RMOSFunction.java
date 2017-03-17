@@ -19,7 +19,7 @@ public class RMOSFunction extends Observable{
         recyclableItemPrices = new HashMap<String, USMoney>();
     }
     /////////////Database Statistics\\\\\\\\\\\\\
-    public void setupStatistics() {
+    /*public void setupStatistics() {
         Connection con = null;
         try {
             String URL = "jdbc:sqlite:C:\\Users\\dantedg\\Documents\\ClassFiles\\ObjectOriented\\RecycleSystem\\RCMdata";
@@ -48,9 +48,9 @@ public class RMOSFunction extends Observable{
                 System.out.println(ex.getMessage());
             }
         }
-    }
+    }*/
 
-    public String getAllEntries() {
+    /*public String getAllEntries() {
         Connection con = null;
         ResultSet result = null;
         String ID ="";
@@ -81,7 +81,7 @@ public class RMOSFunction extends Observable{
             }
         }
         return ID;
-    }
+    }*/
 
 //    public String getMostRecent
 
