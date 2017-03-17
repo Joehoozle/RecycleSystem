@@ -9,6 +9,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -614,6 +616,7 @@ public class RMOS extends JFrame {
                 RCMChangeMoneyButton.setEnabled(true);
                 RCMEmpty.setEnabled(true);
                 RCMOffAlert.setEnabled(false);
+                postEverything();
             }
         });
 
@@ -761,18 +764,7 @@ public class RMOS extends JFrame {
     //functions to pull statistic data
     public void postEverything() {
         mRMOS.setupStatistics();
-        String string = mRMOS.getAllEntries();
-//        ResultSet result = mRMOS.getAllEntries();
-//        try {
-//            if (result.next()) {
-//                String ID = result.getString("RCMId");
-//                statsList.setText(ID);
-//            }
-//        } catch(SQLException e) {
-//            e.printStackTrace();
-//            statsList.setText("Sorry :(");
-//        }
-        statsList.setText(string);
+        mRMOS.getAllEntries();
     }
 }
 

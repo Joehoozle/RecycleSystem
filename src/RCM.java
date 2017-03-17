@@ -13,7 +13,7 @@ import java.util.Observer;
  * Class RCM
  * Created by pjaffurs on 3/8/2017.
  */
-public class RCM extends JFrame implements Observer{
+public class RCM extends JLabel implements Observer{
     //Counters and operation variables
     private USMoney sessionMoney;
 

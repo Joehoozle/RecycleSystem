@@ -1,4 +1,5 @@
 import java.lang.reflect.Array;
+import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,12 +58,15 @@ public class RMOSFunction extends Observable{
             String URL = "jdbc:sqlite:C:\\Users\\dantedg\\Documents\\ClassFiles\\ObjectOriented\\RecycleSystem\\RCMdata";
             con = DriverManager.getConnection(URL);
             System.out.print("Got connected!");
-            String query = "SELECT * FROM RCMTransactions;";
+            String query = "SELECT weight FROM RCMTransactions;";
             Statement statement = con.createStatement();
             result = statement.executeQuery(query);
             System.out.println("Table was created alright");
             if (result.next()) {
-                ID = result.getString("sale");
+                ID = result.getString(1);
+            }
+            while(result.next()) {
+                String weight = result.getString(1);
             }
         } catch(SQLException e) {
             e.printStackTrace();
