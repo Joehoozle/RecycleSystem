@@ -191,11 +191,19 @@ public class RCMFunction{
     }
 
     public void incrementItemCount(String key) {
-        itemCounts.put(key,itemCounts.get(key) + 1);
+        if (!itemCounts.containsKey(key)) {
+            itemCounts.put(key, 0);
+        } else {
+            itemCounts.put(key, (Integer) (itemCounts.get(key)) + 1);
+        }
     }
 
     public int fetchItemCount(String key) {
-        return itemCounts.get(key);
+        if(itemCounts.containsKey(key)) {
+            return itemCounts.get(key);
+        } else {
+            return -1;
+        }
     }
 /*
     public void logTransaction(ArrayList<RecyclableItem> items, ArrayList<String> sales) {
