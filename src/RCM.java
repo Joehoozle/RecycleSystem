@@ -13,7 +13,7 @@ import java.util.Observer;
  * Class RCM
  * Created by pjaffurs on 3/8/2017.
  */
-public class RCM extends JFrame implements Observer{
+public class RCM extends JPanel implements Observer{
     //Counters and operation variables
     private USMoney sessionMoney;
 
@@ -47,7 +47,7 @@ public class RCM extends JFrame implements Observer{
 
     /////////////////////// CONSTRUCTOR /////////////////////////
     public RCM(RCMFunction mRCM){
-        super("RCM");
+//        super("RCM");
 
         try{
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -56,11 +56,13 @@ public class RCM extends JFrame implements Observer{
             e.printStackTrace();
         }
 
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+//        setExtendedState(JFrame.MAXIMIZED_BOTH);
+//        setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        Container container = getContentPane();
+//        Container container = getContentPane();
+        Container container = new Container();
         container.setLayout(new BorderLayout());
+        add(container);
 
         this.mRCM = mRCM;
         sessionMoney = new USMoney(0,0);
@@ -237,8 +239,8 @@ public class RCM extends JFrame implements Observer{
         recyclePanel.add(recycleButton, BorderLayout.SOUTH);
 
         parseActiveItems(list);
-        pack();
-        setLocationRelativeTo(null);
+//        pack();
+//        setLocationRelativeTo(null);
         setVisible(true);
     }
 
