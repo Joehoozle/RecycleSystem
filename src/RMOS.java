@@ -1,4 +1,5 @@
 import com.sun.security.auth.module.JndiLoginModule;
+import javafx.scene.chart.Chart;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot;
@@ -598,6 +599,20 @@ public class RMOS extends JFrame {
         constraints.gridy = 1;
         GraphPanel.add(chart2);
 
+        pickStat.addItem("RCM Least Recently Emptied");
+        pickStat.addItem("RCM with Most Recycles");
+
+        pickStat.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(RCMList.getSelectedIndex() == 1) {
+                    statsList.setText(mRMOS.smallestTimestamp());
+                } else if(RCMList.getSelectedIndex() == 1) {
+                    statsList.setText(mRMOS.mostRecycles());
+                }
+            }
+        });
+
         RCMList.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -635,6 +650,7 @@ public class RMOS extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 emptyRCM(RCMList.getSelectedIndex());
+                updateRCMInformation(RCMList.getSelectedIndex());
             }
         });
 
@@ -724,15 +740,28 @@ public class RMOS extends JFrame {
         DefaultPieDataset data2 = new DefaultPieDataset();
 
         for(int i=0;i<mRMOS.getActiveItemNumber();i++) {
-            if (mRMOS.getNumberOfItems(1) > 0 || mRMOS.getNumberOfItems(2) > 0) {
-                data1.setValue(mRMOS.getItemNameByIndex(i), (mRMOS.fetchItemNumbers(mRMOS.getItemNameByIndex(i), 1)) / (mRMOS.getNumberOfItems(1)));
-                data2.setValue(mRMOS.getItemNameByIndex(i), (mRMOS.fetchItemNumbers(mRMOS.getItemNameByIndex(i), 2)) / (mRMOS.getNumberOfItems(2)));
+            if (mRMOS.getNumberOfItems(0) > 0 && mRMOS.getNumberOfItems(1) > 0) {
+                int temp1 = (((mRMOS.fetchItemNumbers(mRMOS.getItemNameByIndex(i), 0)) * 100) / ((mRMOS.getNumberOfItems(0))));
+                int temp2 = (((mRMOS.fetchItemNumbers(mRMOS.getItemNameByIndex(i), 1))  * 100) / ((mRMOS.getNumberOfItems(1))));
+                data1.setValue(mRMOS.getItemNameByIndex(i), temp1);
+                data2.setValue(mRMOS.getItemNameByIndex(i), temp2);
             }
         }
-        PiePlot pie = new PiePlot(data1);
+        chart1.removeAll();
+        chart2.removeAll();
+        chart1.revalidate();
+        chart2.revalidate();
+        GraphPanel.removeAll();
+        GraphPanel.revalidate();
+        PiePlot pie1 = new PiePlot(data1);
         PiePlot pie2 = new PiePlot(data2);
-        chart1 = new ChartPanel(new JFreeChart(pie));
-        chart2 = new ChartPanel(new JFreeChart(pie2));
+        ChartPanel newChart1 = new ChartPanel(new JFreeChart(pie1));
+        ChartPanel newChart2 = new ChartPanel(new JFreeChart(pie2));
+        GraphPanel.setLayout(new GridLayout(2,1));
+        GraphPanel.add(newChart1);
+        GraphPanel.add(newChart2);
+        GraphPanel.validate();
+        GraphPanel.repaint();
 
     }
 

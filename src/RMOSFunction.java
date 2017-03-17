@@ -8,10 +8,10 @@ import java.util.Observable;
 /**
  * Created by dantedg on 3/14/2017.
  */
-public class RMOSFunction extends Observable{
+public class RMOSFunction extends Observable {
     ArrayList<RCMFunction> RCMList;
     ArrayList<RecyclableItem> activeRecyclableItems;
-    HashMap<String,USMoney> recyclableItemPrices;
+    HashMap<String, USMoney> recyclableItemPrices;
 
     public RMOSFunction(ArrayList<RCMFunction> RCMList) {
         this.RCMList = RCMList;
@@ -118,7 +118,7 @@ public class RMOSFunction extends Observable{
         return Double.toString(RCMList.get(i).getCapacity());
     }
 
-    public void editRCMCapacity(int i,double capacity) {
+    public void editRCMCapacity(int i, double capacity) {
         RCMList.get(i).setCapacity(capacity);
     }
 
@@ -161,16 +161,16 @@ public class RMOSFunction extends Observable{
 
     public void addItem(String string, USMoney cost) {
         activeRecyclableItems.add(new RecyclableItem(string));
-        recyclableItemPrices.put(string,cost);
-        for(int i=0;i<RCMList.size();i++) {
+        recyclableItemPrices.put(string, cost);
+        for (int i = 0; i < RCMList.size(); i++) {
             RCMList.get(i).addItem(new RecyclableItem(string), cost);
         }
 //        notifyObservers(activeRecyclableItems);
     }
 
     public void deleteItem(int i) {
-        for(int j=0;j<RCMList.size();j++) {
-            RCMList.get(j).removeItem(activeRecyclableItems.get(i),i);
+        for (int j = 0; j < RCMList.size(); j++) {
+            RCMList.get(j).removeItem(activeRecyclableItems.get(i), i);
         }
         activeRecyclableItems.remove(i);
     }
@@ -180,8 +180,8 @@ public class RMOSFunction extends Observable{
     }
 
     public void editItemPrice(int i, USMoney price) {
-        recyclableItemPrices.put(activeRecyclableItems.get(i).getMaterialType(),price);
-        for(int j = 0; j < RCMList.size(); j++){
+        recyclableItemPrices.put(activeRecyclableItems.get(i).getMaterialType(), price);
+        for (int j = 0; j < RCMList.size(); j++) {
             RCMList.get(j).setRecyclableItemPrices(activeRecyclableItems.get(i).getMaterialType(), price);
         }
     }
@@ -192,5 +192,25 @@ public class RMOSFunction extends Observable{
 
     public int fetchItemNumbers(String key, int RCMIndex) {
         return RCMList.get(RCMIndex).fetchItemCount(key);
+    }
+
+    public String smallestTimestamp() {
+        if (RCMList.get(0).getTimeStamp().compareTo(RCMList.get(1).getTimeStamp()) > 0) {
+            return RCMList.get(1).getID() + ": " + RCMList.get(0).getTimeStamp();
+        } else if (RCMList.get(0).getTimeStamp().compareTo(RCMList.get(1).getTimeStamp()) < 0) {
+            return RCMList.get(0).getID();
+        } else {
+            return "error";
+        }
+    }
+
+    public String mostRecycles() {
+        if (RCMList.get(0).getRecycleCounter() > RCMList.get(1).getRecycleCounter()) {
+            return RCMList.get(0).getID() + ": " + RCMList.get(0).getRecycleCounter();
+        } else if (RCMList.get(0).getRecycleCounter() <= RCMList.get(1).getRecycleCounter()) {
+            return RCMList.get(1).getID() + ": " + RCMList.get(1).getRecycleCounter();
+        } else {
+            return "error";
+        }
     }
 }

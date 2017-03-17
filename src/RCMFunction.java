@@ -1,6 +1,9 @@
 
 import javax.swing.*;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -20,11 +23,25 @@ public class RCMFunction{
     private ArrayList<RecyclableItem> activeRecyclableItems;
     private HashMap<String, USMoney> recyclableItemPrices;
     private HashMap<String, Integer> itemCounts;
+    private int recycleCounter;
+    private Date timeStamp;
+
+
+
+
+    public Date getTimeStamp() {
+        return timeStamp;
+    }
+
+    public int getRecycleCounter() {
+        return recycleCounter;
+    }
 
     public RCMFunction(String location, String ID, int capacity) {
         full = false;
         this.location = location;
         this.ID = ID;
+        recycleCounter = 0;
         this.capacity = capacity;
         weight = 0;
         numItems = 0;
@@ -34,6 +51,7 @@ public class RCMFunction{
         activeRecyclableItems = new ArrayList<RecyclableItem>();
         recyclableItemPrices = new HashMap<String, USMoney>();
         itemCounts = new HashMap<String,Integer>();
+        timeStamp = new Date();
     }
 
     /////////Getters and Setters\\\\\\\\\
@@ -79,6 +97,7 @@ public class RCMFunction{
 
     public void addWeight(double itemWeight) {
         this.weight += itemWeight;
+        this.capacity -= itemWeight;
     }
 
     public USMoney getMaxMoney(){ return maxMoney; }
@@ -122,6 +141,10 @@ public class RCMFunction{
     ////////////////////// OPERATION METHODS //////////////////////
     public void empty(){
         weight = 0;
+        numItems = 0;
+        itemCounts.clear();
+        capacity = 500;
+        timeStamp = new Date();
     }
 
     public void refillMoney() { currentMoney = maxMoney; }
@@ -135,6 +158,7 @@ public class RCMFunction{
         USMoney coupon = new USMoney(0,0);
         USMoney tmpCost;
         USMoney sumCost = new USMoney(0, 0);
+        recycleCounter++;
         for(RecyclableItem tmp : recyclables){
             tmpWeight = tmp.getWeight();
 
@@ -150,7 +174,7 @@ public class RCMFunction{
            // RCMTransaction.post(tmpCost.toString(), ID, tmpWeight, tmp.getMaterialType(), 0);
             sumWeight += tmpWeight;
             sumCost.addTo(tmpCost.getDollars(), tmpCost.getCents());
-            numItems++;
+//            numItems++;
             sessionCounter++;
             currentMoney.setDollars(0);
             sub *= 100.0;
@@ -191,10 +215,12 @@ public class RCMFunction{
     }
 
     public void incrementItemCount(String key) {
+        numItems++;
         if (!itemCounts.containsKey(key)) {
-            itemCounts.put(key, 0);
+            itemCounts.put(key, 1);
         } else {
-            itemCounts.put(key, (Integer) (itemCounts.get(key)) + 1);
+            int count = itemCounts.get(key);
+            itemCounts.put(key, (count + 1));
         }
     }
 
