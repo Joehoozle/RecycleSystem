@@ -246,6 +246,7 @@ public class RCM extends JPanel{
                 sessionMoney.setCents(0);
                 updateButtons();
                 moneyLabel.setText(sessionMoney.toString());
+
                 //TODO: implement a pop-up for the actual money returned and the
             }
         });

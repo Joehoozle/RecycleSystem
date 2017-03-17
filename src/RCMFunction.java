@@ -1,4 +1,5 @@
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -130,6 +131,8 @@ public class RCMFunction{
         double val = (currentMoney.getDouble() - sumCost.getDouble()) * 100;
         currentMoney.setDollars(0);
         currentMoney.setCents((int)val);
+        JOptionPane.showMessageDialog(null,
+                "Recycling Success! Dispensing " + sumCost.toString() + "!");
         return sumCost;
     }
 
