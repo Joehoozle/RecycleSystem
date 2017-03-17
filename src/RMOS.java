@@ -691,6 +691,8 @@ public class RMOS extends JFrame {
 
         setPreferredSize(new Dimension(1920,1080));
         pack();
+        login.toFront();
+        login.repaint();
 //        revalidate();
 //        setUndecorated(true);
 //        setExtendedState(JFrame.MAXIMIZED_BOTH);

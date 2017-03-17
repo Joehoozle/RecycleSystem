@@ -35,10 +35,10 @@ public class TabbedDisplay extends JPanel{
         RMOS rmos = new RMOS(rmosFunction);
 
         frame.add(new TabbedDisplay(rcmFunction1,rcmFunction2));
+        frame.toBack();
         //frame.repaint();
         frame.revalidate();
         //frame.pack();
-        frame.revalidate();
         frame.repaint();
         frame.setSize(1920,1080);
 //        frame.pack();

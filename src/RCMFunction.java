@@ -129,6 +129,7 @@ public class RCMFunction{
     //What gets called when an item gets recycled
     public USMoney recycle(ArrayList<RecyclableItem> recyclables) {
         double tmpWeight;
+        double sub;
         double sumWeight = 0;
         int sessionCounter = 0;
         USMoney coupon = new USMoney(0,0);
@@ -138,12 +139,11 @@ public class RCMFunction{
             tmpWeight = tmp.getWeight();
 
             tmpCost = recyclableItemPrices.get(tmp.getMaterialType()).calculateCost(tmpWeight);
-
-            if(currentMoney.getDouble() - tmpCost.getDouble() < 0){
+            sub = currentMoney.getDollars() - tmpCost.getDouble();
+            if(sub < 0.0){
                // RCMTransaction.post(tmpCost.toString(), ID, tmpWeight, tmp.getMaterialType(), 0);
                 sumWeight += tmpWeight;
                 coupon.add(tmpCost);
-                numItems++;
                 sessionCounter++;
                 continue;
             }
@@ -152,10 +152,10 @@ public class RCMFunction{
             sumCost.addTo(tmpCost.getDollars(), tmpCost.getCents());
             numItems++;
             sessionCounter++;
+            currentMoney.setDollars(0);
+            sub *= 100.0;
+            currentMoney.setCents((int)sub);
         }
-        double val = (currentMoney.getDouble() - sumCost.getDouble()) * 100;
-        currentMoney.setDollars(0);
-        currentMoney.setCents((int)val);
         if(coupon.getDollars() == 0 && coupon.getCents() == 0) {
             JOptionPane.showMessageDialog(null,
                     sumWeight + " lb. and " + sessionCounter + " item recycling success! Dispensing " + sumCost.toString() + "!");
