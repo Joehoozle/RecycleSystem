@@ -99,12 +99,17 @@ public class RMOS extends JFrame {
         private Container loginScreen;
 
         public LoginFrame() {
+            super("Please Log In");
+            setLocationRelativeTo(null);
+
             username = new JTextField();
             password = new JPasswordField();
             loginButton = new JButton("Submit");
             loginBox = new JPanel();
             loginScreen = getContentPane();
             container.setVisible(false);
+
+
 
             loginScreen.setLayout(new FlowLayout());
             loginBox.setLayout(new BoxLayout(loginBox, BoxLayout.Y_AXIS));
@@ -114,7 +119,7 @@ public class RMOS extends JFrame {
             loginBox.add(password, JLabel.CENTER);
             username.setPreferredSize(new Dimension(200, 20));
             loginBox.add(username, JLabel.CENTER);
-            loginScreen.setSize(new Dimension(200, 20));
+            loginScreen.setSize(new Dimension(400, 100));
             loginButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -132,6 +137,8 @@ public class RMOS extends JFrame {
 
 
     public RMOS(RMOSFunction rmosFunction) {
+        super("RMOS");
+        setSize(new Dimension(1920, 1080));
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
@@ -679,6 +686,7 @@ public class RMOS extends JFrame {
         RCMTurnOn.doClick();
 
 
+        setPreferredSize(new Dimension(1920,1080));
         pack();
         revalidate();
 //        setUndecorated(true);
@@ -686,6 +694,7 @@ public class RMOS extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
+        //setSize(new Dimension(1920,1080));
     }
 
     //functions to update UI-----------------------------------
