@@ -32,6 +32,8 @@ public class RCM extends JFrame implements Observer{
     private JPanel moneyPanel;
     private JPanel dataPanel;
 
+    private JRadioButton single;
+    private JRadioButton multiple;
     private JButton recycleButton;
     private JButton[] objectButtons; //object option buttons
     private int[] objectCounters;
@@ -40,9 +42,10 @@ public class RCM extends JFrame implements Observer{
 
     private JLabel title;
     private JLabel moneyLabel;
+    private JLabel disabled;
 
     /////////////////////// CONSTRUCTOR /////////////////////////
-    public RCM(String location, String ID, int capacity){
+    public RCM(String location, String ID, int capacity, USMoney maxMoney){
         super("RCM");
 
         try{
@@ -58,12 +61,10 @@ public class RCM extends JFrame implements Observer{
         Container container = getContentPane();
         container.setLayout(new BorderLayout());
 
-//<<<<<<< Updated upstream
-//        mRCM = new RCMFunction(location, ID, capacity);
+
+        mRCM = new RCMFunction(location, ID, capacity, maxMoney);
         tmpMoney = new USMoney(0,0);
-//=======
-//        func = new RCMFunction(location, ID, capacity);
-//>>>>>>> Stashed changes
+
         Font titleFont = new Font("Title", Font.PLAIN, 20);
         Font entryFont = new Font("Entry", Font.PLAIN, 30);
 
@@ -71,10 +72,13 @@ public class RCM extends JFrame implements Observer{
         recycleButton = new JButton();
         recycleButton.setEnabled(false);
 
-        //Initializing button and counter arrays
+        //Buttons for choosing recyclables
         objectButtons = new JButton[6];
+        //Counters for session objects
         objectCounters = new int[6];
+        //Labels for session objects
         objectLabels = new JLabel[6];
+        //Labels for object counters
         counterLabels = new JLabel[6];
 
         /* HEADER PANEL */
@@ -82,18 +86,24 @@ public class RCM extends JFrame implements Observer{
         headerPanel.setLayout(new BorderLayout());
         container.add(headerPanel, BorderLayout.NORTH);
 
+        disabled = new JLabel("RCM INACTIVE");
+        disabled.setFont(entryFont);
+        disabled.setForeground(Color.RED);
+        disabled.setVisible(false);
+
         titlePanel = new JPanel();
         titlePanel.setBackground(Color.decode("#00BCD4"));
-        title = new JLabel("RCM " + ID + ", " + location);
+        title = new JLabel(mRCM.toString());
         title.setFont(entryFont);
         titlePanel.add(title);
+        titlePanel.add(disabled);
         headerPanel.add(titlePanel, BorderLayout.NORTH);
         optionPanel = new JPanel();
         optionPanel.setBorder(BorderFactory.createTitledBorder(null,"Select Your Recycling Option",
                 TitledBorder.CENTER, TitledBorder.TOP, titleFont));
         headerPanel.add(optionPanel, BorderLayout.SOUTH);
 
-        JRadioButton single = new JRadioButton("Recycle One Item");
+        single = new JRadioButton("Recycle One Item");
         single.setSelected(true);
         single.setFont(entryFont);
         single.addActionListener(new ActionListener() {
@@ -104,7 +114,7 @@ public class RCM extends JFrame implements Observer{
             }
         });
 
-        JRadioButton multiple = new JRadioButton("Recycle Multiple Items");
+        multiple = new JRadioButton("Recycle Multiple Items");
         multiple.setFont(entryFont);
         multiple.addActionListener(new ActionListener() {
             @Override
@@ -144,12 +154,15 @@ public class RCM extends JFrame implements Observer{
                 public void actionPerformed(ActionEvent e) {
                     JButton button = (JButton) e.getSource();
                     if(single.isSelected()){
-                        mRCM.recycle();
+                        list.add(new RecyclableItem(counterLabels[tmp].getText()));
+                        mRCM.recycle(list);
+                        list.clear();
                     }
                     else{
+                        //TODO: add prices to counter and configure weights
+                        list.add(new RecyclableItem(counterLabels[tmp].getText()));
                         objectCounters[tmp]++;
                         counterLabels[tmp].setText(String.valueOf(objectCounters[tmp]));
-                        mRCM.recycle();
                     }
                 }
             });
@@ -207,7 +220,8 @@ public class RCM extends JFrame implements Observer{
         recycleButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                mRCM.recycle();
+                mRCM.recycle(list);
+                list.clear();
             }
         });
         recyclePanel.add(recycleButton, BorderLayout.SOUTH);
@@ -219,6 +233,26 @@ public class RCM extends JFrame implements Observer{
     }
 
     ////////////////////// OPERATION METHODS //////////////////////
+    public void activate(){
+        recycleButton.setEnabled(true);
+        single.setEnabled(true);
+        multiple.setEnabled(true);
+        for(int i=0;i < 6; i++){
+            objectButtons[i].setEnabled(true);
+        }
+        disabled.setVisible(false);
+    }
+
+    public void deactivate(){
+        recycleButton.setEnabled(false);
+        single.setEnabled(false);
+        multiple.setEnabled(false);
+        for(int i=0;i < 6; i++){
+            objectButtons[i].setEnabled(false);
+        }
+        disabled.setVisible(true);
+    }
+
     public void update(Observable ob, Object object){
         ArrayList<RecyclableItem> available = (ArrayList<RecyclableItem>) object;
 
@@ -252,6 +286,6 @@ public class RCM extends JFrame implements Observer{
     }
     ////////////////////////// MAIN ////////////////////////////
     public static void main(String[] args){
-        new RCM("Library","0",100);
+        new RCM("Library","0",100, new USMoney(100,0));
     }
 }

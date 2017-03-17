@@ -1,9 +1,11 @@
+
 import java.util.ArrayList;
 
 /**
+ * Class RCMFunction
  * Created by dantedg on 3/14/2017.
  */
-public class RCMFunction {
+public class RCMFunction{
     private double capacity;
     private double weight;
     private USMoney maxMoney;
@@ -18,7 +20,7 @@ public class RCMFunction {
         this.capacity = capacity;
         weight = 0;
         numItems = 0;
-        currentMoney = new USMoney(0,0);
+        currentMoney = maxMoney;
         this.maxMoney = maxMoney;
     }
 
@@ -86,9 +88,11 @@ public class RCMFunction {
     public void refillMoney() { currentMoney = maxMoney; }
 
     //What gets called when an item gets recycled
-    public void recycle() {
+    public void recycle(ArrayList<RecyclableItem> recyclables) {
         numItems++;
-        //RCMTransaction.post()
+        for(RecyclableItem tmp : recyclables){
+            //RCMTransaction.post();
+        }
     }
 
     public void logTransaction(ArrayList<RecyclableItem> items, ArrayList<String> sales) {
