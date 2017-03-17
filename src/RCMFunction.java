@@ -16,6 +16,7 @@ public class RCMFunction{
     private int numItems;
     private ArrayList<RecyclableItem> activeRecyclableItems;
     private HashMap<String, USMoney> recyclableItemPrices;
+    private HashMap<String, Integer> itemCounts;
 
     public RCMFunction(String location, String ID, int capacity) {
         this.location = location;
@@ -27,6 +28,7 @@ public class RCMFunction{
         currentMoney = maxMoney;
         activeRecyclableItems = new ArrayList<RecyclableItem>();
         recyclableItemPrices = new HashMap<String, USMoney>();
+        itemCounts = new HashMap<String,Integer>();
     }
 
     /////////Getters and Setters\\\\\\\\\
@@ -136,6 +138,15 @@ public class RCMFunction{
     public void addItem(RecyclableItem x, USMoney value) {
         activeRecyclableItems.add(x);
         recyclableItemPrices.put(x.getMaterialType(),value);
+    }
+
+    public void removeItem(RecyclableItem item, int index) {
+        recyclableItemPrices.remove(item.getMaterialType());
+        activeRecyclableItems.remove(index);
+    }
+
+    public USMoney getItemPrice(String item) {
+        return recyclableItemPrices.get("item");
     }
 /*
     public void logTransaction(ArrayList<RecyclableItem> items, ArrayList<String> sales) {

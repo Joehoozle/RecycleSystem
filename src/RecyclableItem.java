@@ -26,6 +26,6 @@ public class RecyclableItem {
 
     private void setWeight() {
         Random r = new Random();
-        this.weight = -10.0 + r.nextDouble() * 20.0;
+        this.weight = r.nextDouble() * 20.0;
     }
 }
