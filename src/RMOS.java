@@ -124,6 +124,7 @@ public class RMOS extends JFrame {
                         container.setVisible(true);
                         container.revalidate();
                         container.repaint();
+                        painter();
                         dispose();
                     }
                 }
@@ -139,7 +140,8 @@ public class RMOS extends JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        container = getContentPane();
+        container = new Container();
+        add(container);
 
         LoginFrame login = new LoginFrame();
         login.setVisible(true);
@@ -317,6 +319,8 @@ public class RMOS extends JFrame {
         //---------------------------------------------------------------------
         RCMPanel.setLayout(new GridBagLayout());
 
+        constraints.weightx = 1;
+        constraints.weighty = 1;
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -674,9 +678,9 @@ public class RMOS extends JFrame {
             }
         });
 
-        pack();
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+//        pack();
+//        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        setLocationRelativeTo(null);
         setVisible(true);
     }
 
@@ -715,6 +719,11 @@ public class RMOS extends JFrame {
             itemPrices.get(i).setVisible(true);
             itemPrices.get(i).setText(mRMOS.getItemNameByIndex(i) + ": " + mRMOS.getItemPrice(i));
         }
+    }
+
+    public void painter() {
+        repaint();
+        revalidate();
     }
 
     //function to add/edit RCMs------------------------------------
