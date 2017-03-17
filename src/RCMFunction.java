@@ -20,13 +20,8 @@ public class RCMFunction{
         this.capacity = capacity;
         weight = 0;
         numItems = 0;
-<<<<<<< Updated upstream
-        currentMoney = maxMoney;
-        this.maxMoney = maxMoney;
-=======
-        currentMoney = new USMoney(0,0);
         this.maxMoney = new USMoney(200,0);
->>>>>>> Stashed changes
+        currentMoney = maxMoney;
     }
 
     /////////Getters and Setters\\\\\\\\\

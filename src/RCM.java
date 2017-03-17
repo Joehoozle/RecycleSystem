@@ -45,7 +45,7 @@ public class RCM extends JFrame implements Observer{
     private JLabel disabled;
 
     /////////////////////// CONSTRUCTOR /////////////////////////
-    public RCM(String location, String ID, int capacity, USMoney maxMoney){
+    public RCM(RCMFunction mRCM){
         super("RCM");
 
         try{
@@ -61,15 +61,10 @@ public class RCM extends JFrame implements Observer{
         Container container = getContentPane();
         container.setLayout(new BorderLayout());
 
-<<<<<<< Updated upstream
 
-        mRCM = new RCMFunction(location, ID, capacity, maxMoney);
+        this.mRCM = mRCM;
         tmpMoney = new USMoney(0,0);
 
-=======
-//        mRCM = new RCMFunction(location, ID, capacity);
-        tmpMoney = new USMoney(0,0);
->>>>>>> Stashed changes
         Font titleFont = new Font("Title", Font.PLAIN, 20);
         Font entryFont = new Font("Entry", Font.PLAIN, 30);
 
@@ -291,6 +286,6 @@ public class RCM extends JFrame implements Observer{
     }
     ////////////////////////// MAIN ////////////////////////////
     public static void main(String[] args){
-        new RCM("Library","0",100, new USMoney(100,0));
+        new RCM(new RCMFunction("Library", "0", 100));
     }
 }
