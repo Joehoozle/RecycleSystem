@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
  * Created by Dante on 3/8/2017.
@@ -51,6 +52,7 @@ public class RMOS extends JFrame {
 //    private JButton updateStatsList;
     private JComboBox<String> pickStat;
     private JLabel statsListLabel;
+    private ArrayList<JLabel> itemPrices;
     private JLabel itemPrice1;
     private JLabel itemPrice2;
     private JLabel itemPrice3;
@@ -70,12 +72,14 @@ public class RMOS extends JFrame {
     private JButton addRCMButton;
     private JLabel editItemLabel;
     private JComboBox<String> editItemBox;
-    private JTextField editPriceBox;
+    private JTextField editItemPriceDollars;
+    private JTextField editItemPriceCents;
     private JButton editPriceSubmit;
     private JLabel addNewItem;
     private JTextField addNewItemName;
     private JLabel addNewItemPriceLabel;
-    private JTextField addNewItemPrice;
+    private JTextField addNewItemPriceDollars;
+    private JTextField addNewItemPriceCents;
     private JButton addNewItemButton;
     private JComboBox<String> deleteItemBox;
     private JButton deleteItemSubmit;
@@ -146,24 +150,36 @@ public class RMOS extends JFrame {
         editItemBox = new JComboBox();
         editItemLabel = new JLabel("Edited Item Price");
         editItemPriceLabel = new JLabel("Edit Price");
-        editPriceBox = new JTextField();
+        editItemPriceDollars = new JTextField("Dollars");
+        editItemPriceCents = new JTextField("Cents");
         editPriceSubmit = new JButton("Edit Price");
         addNewItem = new JLabel("Add an Item");
         addNewItemName = new JTextField();
         addNewItemPriceLabel = new JLabel("Item Price Per Pound");
-        addNewItemPrice = new JTextField();
+        addNewItemPriceDollars = new JTextField("Enter Dollars");
+        addNewItemPriceCents = new JTextField("Enter Cents");
         addNewItemButton = new JButton("Add New Item");
         deleteItemLabel = new JLabel("Delete an Item");
         deleteItemBox = new JComboBox();
         deleteItemSubmit = new JButton("Delete Item");
 
         statsListLabel = new JLabel("Statistics");
+       itemPrices = new ArrayList<JLabel>();
         itemPrice1 = new JLabel("item");
         itemPrice2 = new JLabel("item");
         itemPrice3 = new JLabel("item");
         itemPrice4 = new JLabel("item");
         itemPrice5 = new JLabel("item");
         itemPrice6 = new JLabel("item");
+        itemPrices.add(itemPrice1);
+        itemPrices.add(itemPrice2);
+        itemPrices.add(itemPrice3);
+        itemPrices.add(itemPrice4);
+        itemPrices.add(itemPrice5);
+        itemPrices.add(itemPrice6);
+        for(int i = 0; i < 6; i++) {
+            itemPrices.get(i).setVisible(false);
+        }
         pickStat = new JComboBox<String>();
         statsList = new JTextArea();
 //        updateStatsList = new JButton("Stats");
@@ -406,7 +422,11 @@ public class RMOS extends JFrame {
 
         constraints.gridx = 1;
         constraints.gridy = 7;
-        ControlPanel.add(editPriceBox,constraints);
+        ControlPanel.add(editItemPriceDollars,constraints);
+
+        constraints.gridx = 2;
+        constraints.gridy = 7;
+        ControlPanel.add(editItemPriceCents,constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 8;
@@ -427,7 +447,11 @@ public class RMOS extends JFrame {
 
         constraints.gridx = 1;
         constraints.gridy = 11;
-        ControlPanel.add(addNewItemPrice,constraints);
+        ControlPanel.add(addNewItemPriceDollars,constraints);
+
+        constraints.gridx = 2;
+        constraints.gridy = 11;
+        ControlPanel.add(addNewItemPriceCents,constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 12;
@@ -591,8 +615,9 @@ public class RMOS extends JFrame {
         addNewItemButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){;
-                mRMOS.addItem((String) addNewItemName.getText(), new USMoney(Integer.parseInt(addNewItemPrice.getText()),0));
-                updateItemComboBoxes();
+                mRMOS.addItem((String) addNewItemName.getText(), new USMoney(Integer.parseInt(addNewItemPriceDollars.getText()),Integer.parseInt(addNewItemPriceCents.getText())));
+                updateItemComboBoxesAdd();
+                updateItemPriceInformation();
             }
         });
 
@@ -600,7 +625,8 @@ public class RMOS extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mRMOS.editItemPrice(editItemBox.getSelectedIndex(),
-                        new USMoney(Integer.parseInt(RCMChangeMoneyDollars.getText()),Integer.parseInt(RCMChangeMoneyDollars.getText())));
+                        new USMoney(Integer.parseInt(editItemPriceDollars.getText()),Integer.parseInt(editItemPriceCents.getText())));
+                updateItemPriceInformation();
             }
         });
 
@@ -608,7 +634,8 @@ public class RMOS extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mRMOS.deleteItem(deleteItemBox.getSelectedIndex());
-                updateItemComboBoxes();
+                updateItemComboBoxesDelete(deleteItemBox.getSelectedIndex());
+                updateItemPriceInformation();
             }
         });
 
@@ -634,10 +661,24 @@ public class RMOS extends JFrame {
         RCMMoney.setText("Money: " + mRMOS.getRCMMoney(i));
     }
 
-    public void updateItemComboBoxes() {
-        for(int i=0;i<mRMOS.getActiveItemNumber();i++) {
-            deleteItemBox.addItem(mRMOS.getActiveItemName(i));
-            editItemBox.addItem(mRMOS.getActiveItemName(i));
+    public void updateItemComboBoxesAdd() {
+        deleteItemBox.addItem(mRMOS.getActiveItemName(mRMOS.getActiveItemNumber()-1));
+        editItemBox.addItem(mRMOS.getActiveItemName(mRMOS.getActiveItemNumber()-1));
+    }
+
+    public void updateItemComboBoxesDelete(int i){
+        deleteItemBox.removeItemAt(i);
+        editItemBox.removeItemAt(i);
+        revalidate();
+    }
+
+    public void updateItemPriceInformation() {
+        for(int i = 0; i < 6; i++) {
+            itemPrices.get(i).setVisible(false);
+        }
+        for(int i =0; i<mRMOS.getActiveItemNumber(); i++) {
+            itemPrices.get(i).setVisible(true);
+            itemPrices.get(i).setText(mRMOS.getItemNameByIndex(i) + ": " + mRMOS.getItemPrice(i));
         }
     }
 
@@ -659,6 +700,11 @@ public class RMOS extends JFrame {
         mRMOS.empty(index);
     }
 //functions to add/edit items
+
+    public void addNewItem(String name, USMoney price) {
+        mRMOS.addItem(name,price);
+    }
+
 
     //functions to pull statistic data
     public void postEverything() {

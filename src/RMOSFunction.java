@@ -138,7 +138,11 @@ public class RMOSFunction extends Observable{
     }
 
     public String getActiveItemName(int i) {
-        return activeRecyclableItems.get(i).toString();
+        return activeRecyclableItems.get(i).getMaterialType();
+    }
+
+    public String getItemNameByIndex(int i) {
+        return activeRecyclableItems.get(i).getMaterialType();
     }
 
     public void addItem(String string, USMoney cost) {
@@ -152,23 +156,14 @@ public class RMOSFunction extends Observable{
         notifyObservers(activeRecyclableItems);
     }
 
-    public void editItemPrice(int i, USMoney price) {
+    public USMoney getItemPrice(int i) {
+        return recyclableItemPrices.get(getItemNameByIndex(i));
+    }
 
+    public void editItemPrice(int i, USMoney price) {
+        recyclableItemPrices.put(activeRecyclableItems.get(i).getMaterialType(),price);
     }
     public String getNumberOfItems(int i) {
         return Integer.toString(RCMList.get(i).getNumItems());
     }
-
-
-
-
-
-    public void test() {
-        ArrayList<RecyclableItem> items = new ArrayList<RecyclableItem>();
-        items.add(new RecyclableItem("glass"));
-        ArrayList<String> sales = new ArrayList<String>();
-        sales.add("$4.32");
-        RCMList.get(1).logTransaction(items,sales);
-    }
-
 }
