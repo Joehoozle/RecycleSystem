@@ -13,7 +13,7 @@ public class TabbedDisplay extends JPanel{
         tabbedPane.addTab("RCM1",new RCM(rcmFunction1));
         tabbedPane.addTab("RCM2",new RCM(rcmFunction2));
         add(tabbedPane);
-//        tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 //        setVisible(true);
 //        repaint();
 //        revalidate();

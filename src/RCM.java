@@ -13,7 +13,7 @@ import java.util.Observer;
  * Class RCM
  * Created by pjaffurs on 3/8/2017.
  */
-public class RCM extends JPanel implements Observer{
+public class RCM extends JFrame implements Observer{
     //Counters and operation variables
     private USMoney sessionMoney;
 
@@ -111,8 +111,8 @@ public class RCM extends JPanel implements Observer{
         single.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                updateButtons();
                 recycleButton.setEnabled(false);
-
             }
         });
 
@@ -121,6 +121,7 @@ public class RCM extends JPanel implements Observer{
         multiple.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                updateButtons();
                 recycleButton.setEnabled(true);
             }
         });
@@ -156,7 +157,7 @@ public class RCM extends JPanel implements Observer{
                 public void actionPerformed(ActionEvent e) {
                     JButton button = (JButton) e.getSource();
                     if(single.isSelected()){
-                        list.add(new RecyclableItem(counterLabels[tmp].getText()));
+                        list.add(new RecyclableItem(objectLabels[tmp].getText()));
                         mRCM.recycle(list);
                         list.clear();
                     }
@@ -164,7 +165,7 @@ public class RCM extends JPanel implements Observer{
                         //adds selected item to the list and updates the displayed price
                         USMoney tmpMoney;
                         USMoney price;
-                        list.add(new RecyclableItem(counterLabels[tmp].getText()));
+                        list.add(new RecyclableItem(objectLabels[tmp].getText()));
                         objectCounters[tmp]++;
                         counterLabels[tmp].setText(String.valueOf(objectCounters[tmp]));
                         tmpMoney = mRCM.getRecyclableItemPrices().get(objectButtons[tmp].getText());
@@ -232,12 +233,14 @@ public class RCM extends JPanel implements Observer{
                 list.clear();
                 sessionMoney.setDollars(0);
                 sessionMoney.setCents(0);
+                updateButtons();
                 moneyLabel.setText(sessionMoney.toString());
                 //TODO: implement a pop-up for the actual money returned and the
             }
         });
         recyclePanel.add(recycleButton, BorderLayout.SOUTH);
 
+        updateButtons();
         parseActiveItems(list);
 //        pack();
 //        setLocationRelativeTo(null);
@@ -299,8 +302,24 @@ public class RCM extends JPanel implements Observer{
             }
         }
     }
+
+    public void updateButtons() {
+        for (int i = 0; i < mRCM.availableItems(); i++) {
+            objectButtons[i].setVisible(true);
+            objectLabels[i].setText(mRCM.getItemNameByIndex(i));
+            objectButtons[i].setText(mRCM.getItemNameByIndex(i));
+            counterLabels[i].setVisible(true);
+            objectLabels[i].setVisible(true);
+        }
+    }
+
+
+
     ////////////////////////// MAIN ////////////////////////////
     public static void main(String[] args){
-        new RCM(new RCMFunction("Library", "0", 100));
+        RCMFunction rcmFunction = new RCMFunction("park","0001",200);
+        rcmFunction.addItem(new RecyclableItem("glass"), new USMoney(4,40));
+        rcmFunction.addItem(new RecyclableItem("aluminum"), new USMoney(5,50));
+        RCM rcm = new RCM(rcmFunction);
     }
 }

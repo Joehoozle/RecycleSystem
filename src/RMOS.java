@@ -681,6 +681,8 @@ public class RMOS extends JFrame {
 
         pack();
         revalidate();
+//        setUndecorated(true);
+//        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
