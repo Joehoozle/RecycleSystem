@@ -30,6 +30,7 @@ public class RCMFunction{
         numItems = 0;
         this.maxMoney = new USMoney(200, 0);
         currentMoney = maxMoney;
+        isActivated = true;
         activeRecyclableItems = new ArrayList<RecyclableItem>();
         recyclableItemPrices = new HashMap<String, USMoney>();
         itemCounts = new HashMap<String,Integer>();
@@ -187,6 +188,14 @@ public class RCMFunction{
 
     public boolean isActivated() {
         return isActivated;
+    }
+
+    public void incrementItemCount(String key) {
+        itemCounts.put(key,itemCounts.get(key) + 1);
+    }
+
+    public int fetchItemCount(String key) {
+        return itemCounts.get(key);
     }
 /*
     public void logTransaction(ArrayList<RecyclableItem> items, ArrayList<String> sales) {

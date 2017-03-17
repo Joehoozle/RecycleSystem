@@ -49,6 +49,8 @@ public class RMOS extends JFrame {
 
     //modify menu items
     private JPanel GraphPanel;
+    private ChartPanel chart1;
+    private ChartPanel chart2;
 
     //Statistic Menu
     private JPanel StatisticPanel;
@@ -88,8 +90,6 @@ public class RMOS extends JFrame {
     private JButton deleteItemSubmit;
     private JLabel deleteItemLabel;
     private JLabel editItemPriceLabel;
-
-    //TODO: Make a login screen
 
 
     public class LoginFrame extends JFrame {
@@ -584,21 +584,19 @@ public class RMOS extends JFrame {
 
         GraphPanel.setLayout(new GridLayout(2, 1));
         DefaultPieDataset data = new DefaultPieDataset();
-        data.setValue("this", new Double(40));
-        data.setValue("that", new Double(60));
 
         PiePlot pie = new PiePlot(data);
         PiePlot pie2 = new PiePlot(data);
-        ChartPanel chart = new ChartPanel(new JFreeChart(pie));
-        ChartPanel chart2 = new ChartPanel(new JFreeChart(pie2));
+
+        chart1 = new ChartPanel(new JFreeChart(pie));
+        chart2 = new ChartPanel(new JFreeChart(pie2));
+
         constraints.gridx = 0;
         constraints.gridy = 0;
-        GraphPanel.add(chart);
+        GraphPanel.add(chart1);
         constraints.gridx = 0;
         constraints.gridy = 1;
         GraphPanel.add(chart2);
-
-        //TODO: Implement these action listeners
 
         RCMList.addActionListener(new ActionListener() {
             @Override
@@ -716,6 +714,24 @@ public class RMOS extends JFrame {
         RCMLocation.setText("Location: " + mRMOS.getRCMLocation(i));
         RCMItems.setText("Items: " + mRMOS.getNumberOfItems(i));
         RCMMoney.setText("Money: " + mRMOS.getRCMMoney(i));
+        updateGraphs();
+    }
+
+    public void updateGraphs() {
+        DefaultPieDataset data1 = new DefaultPieDataset();
+        DefaultPieDataset data2 = new DefaultPieDataset();
+
+        for(int i=0;i<mRMOS.getActiveItemNumber();i++) {
+            if (mRMOS.getNumberOfItems(1) > 0 || mRMOS.getNumberOfItems(2) > 0) {
+                data1.setValue(mRMOS.getItemNameByIndex(i), (mRMOS.fetchItemNumbers(mRMOS.getItemNameByIndex(i), 1)) / (mRMOS.getNumberOfItems(1)));
+                data2.setValue(mRMOS.getItemNameByIndex(i), (mRMOS.fetchItemNumbers(mRMOS.getItemNameByIndex(i), 2)) / (mRMOS.getNumberOfItems(2)));
+            }
+        }
+        PiePlot pie = new PiePlot(data1);
+        PiePlot pie2 = new PiePlot(data2);
+        chart1 = new ChartPanel(new JFreeChart(pie));
+        chart2 = new ChartPanel(new JFreeChart(pie2));
+
     }
 
     public void updateItemComboBoxesAdd() {

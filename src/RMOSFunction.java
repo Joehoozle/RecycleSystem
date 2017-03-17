@@ -186,7 +186,11 @@ public class RMOSFunction extends Observable{
         }
     }
 
-    public String getNumberOfItems(int i) {
-        return Integer.toString(RCMList.get(i).getNumItems());
+    public int getNumberOfItems(int i) {
+        return RCMList.get(i).getNumItems();
+    }
+
+    public int fetchItemNumbers(String key, int RCMIndex) {
+        return RCMList.get(RCMIndex).fetchItemCount(key);
     }
 }

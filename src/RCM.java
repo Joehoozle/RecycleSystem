@@ -177,6 +177,7 @@ public class RCM extends JPanel{
                         if(mRCM.isFull()){
                             return;
                         }
+                        mRCM.incrementItemCount(item.getMaterialType());
                         list.add(item);
                         mRCM.recycle(list);
                         list.clear();
@@ -193,6 +194,7 @@ public class RCM extends JPanel{
                             sessionMoney = new USMoney(0,0);
                             return;
                         }
+                        mRCM.incrementItemCount(item.getMaterialType());
                         list.add(item);
                         objectCounters[tmp]++;
                         counterLabels[tmp].setText(String.valueOf(objectCounters[tmp]));
