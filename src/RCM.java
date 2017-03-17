@@ -4,7 +4,9 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -252,8 +254,9 @@ public class RCM extends JFrame implements Observer{
         disabled.setVisible(true);
     }
 
-    public void update(Observable ob, Object object){
-        ArrayList<RecyclableItem> available = (ArrayList<RecyclableItem>) object;
+    public void update(Observable o, Object arg){
+
+        ArrayList<RecyclableItem> available = (ArrayList<RecyclableItem>) arg;
 
         parseActiveItems(available);
     }
@@ -266,6 +269,7 @@ public class RCM extends JFrame implements Observer{
      * @param list      list of items accepted by RCMs
      */
     public void parseActiveItems(ArrayList<RecyclableItem> list){
+        HashMap<String,USMoney> prices = mRCM.getRecyclableItemPrices();
         for(int i = 0; i < 6;i++) {
             if (i >= list.size()) {
                 objectButtons[i].setVisible(false);
@@ -273,8 +277,9 @@ public class RCM extends JFrame implements Observer{
                 counterLabels[i].setVisible(false);
             }
             else {
+                String typeText = list.get(i).getMaterialType();
                 objectCounters[i] = 0;
-                objectButtons[i].setText(list.get(i).getMaterialType());
+                objectButtons[i].setText(typeText + ": " + mRCM.getRecyclableItemPrices().get(typeText) + "/lb");
                 objectButtons[i].setVisible(true);
                 objectLabels[i].setText(list.get(i).getMaterialType());
                 objectLabels[i].setVisible(true);

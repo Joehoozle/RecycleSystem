@@ -83,7 +83,12 @@ public class RCMFunction{
         return "RCM: " + ID + " in " + location;
     }
 
-    public void setRecyclableItemPrices(HashMap<String, USMoney> itemPrices) { this.recyclableItemPrices = itemPrices; }
+    public void setRecyclableItemPrices(String key, USMoney price){
+        recyclableItemPrices.get(key).setDollars(price.getDollars());
+        recyclableItemPrices.get(key).setCents(price.getCents());
+    }
+
+    public HashMap<String,USMoney> getRecyclableItemPrices() { return recyclableItemPrices; }
 
     ////////////////////// OPERATION METHODS //////////////////////
     public void empty(){
@@ -93,7 +98,7 @@ public class RCMFunction{
     public void refillMoney() { currentMoney = maxMoney; }
 
     //What gets called when an item gets recycled
-    public void recycle(ArrayList<RecyclableItem> recyclables) {
+    public USMoney recycle(ArrayList<RecyclableItem> recyclables) {
         double tmpWeight;
         double sumWeight = 0;
         USMoney tmpCost;
@@ -109,12 +114,13 @@ public class RCMFunction{
             RCMTransaction.post(tmpCost.toString(), ID, tmpWeight, tmp.getMaterialType(), 0);
             sumWeight += tmpWeight;
             sumCost.addTo(tmpCost.getDollars(), tmpCost.getCents());
+            numItems++;
         }
         weight += sumWeight;
         double val = (currentMoney.getDouble() - sumCost.getDouble()) * 100;
         currentMoney.setDollars(0);
         currentMoney.setCents((int)val);
-
+        return sumCost;
     }
 
     public void logTransaction(ArrayList<RecyclableItem> items, ArrayList<String> sales) {

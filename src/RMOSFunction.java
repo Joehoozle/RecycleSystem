@@ -164,6 +164,10 @@ public class RMOSFunction extends Observable{
 
     public void editItemPrice(int i, USMoney price) {
         recyclableItemPrices.put(activeRecyclableItems.get(i).getMaterialType(),price);
+        for(int j = 0; j < RCMList.size(); j++){
+            RCMList.get(j).setRecyclableItemPrices(activeRecyclableItems.get(i).toString(), price);
+        }
+        notifyObservers(activeRecyclableItems);
     }
 
     public String getNumberOfItems(int i) {
