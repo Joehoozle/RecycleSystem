@@ -21,6 +21,7 @@ public class TabbedDisplay extends JPanel{
 
     public static void main(String[] args){
         JFrame frame = new JFrame();
+        frame.setSize(1920,1080);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         RCMFunction rcmFunction1 = new RCMFunction("Library","0001", 500);
         RCMFunction rcmFunction2 = new RCMFunction("Park", "0002",500);
@@ -35,9 +36,9 @@ public class TabbedDisplay extends JPanel{
         //rmos.revalidate();
 
         frame.add(new TabbedDisplay(rcmFunction1,rcmFunction2));
-        frame.repaint();
+        //frame.repaint();
         frame.revalidate();
-        frame.pack();
+        //frame.pack();
         frame.setVisible(true);
     }
 }

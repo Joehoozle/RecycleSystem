@@ -35,6 +35,7 @@ public class RCM extends JPanel{
 
     private JRadioButton single;
     private JRadioButton multiple;
+    private JButton updateButton;
     private JButton recycleButton;
     private JButton[] objectButtons; //object option buttons
     private int[] objectCounters;
@@ -132,6 +133,16 @@ public class RCM extends JPanel{
         bg.add(multiple);
         optionPanel.add(single);
         optionPanel.add(multiple);
+
+        updateButton = new JButton("UPDATE");
+        updateButton.setFont(entryFont);
+        updateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateButtons();
+            }
+        });
+        optionPanel.add(updateButton);
 
         /* ENTRY PANEL */
         entryPane = new JPanel();
