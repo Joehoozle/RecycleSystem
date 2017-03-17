@@ -328,8 +328,9 @@ public class RCM extends JPanel{
     public void updateButtons() {
         for (int i = 0; i < mRCM.availableItems(); i++) {
             objectButtons[i].setVisible(true);
-            objectLabels[i].setText(mRCM.getItemNameByIndex(i));
             objectButtons[i].setText(mRCM.getItemNameByIndex(i));
+            objectLabels[i].setText(mRCM.getItemNameByIndex(i) + ": " + mRCM.getRecyclableItemPrices().
+                    get(objectButtons[i].getText()).toString() + "/lb");
             counterLabels[i].setVisible(true);
             objectLabels[i].setVisible(true);
         }

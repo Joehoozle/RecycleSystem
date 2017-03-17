@@ -119,6 +119,7 @@ public class RCMFunction{
     public USMoney recycle(ArrayList<RecyclableItem> recyclables) {
         double tmpWeight;
         double sumWeight = 0;
+        int sessionCounter = 0;
         USMoney coupon = new USMoney(0,0);
         USMoney tmpCost;
         USMoney sumCost = new USMoney(0, 0);
@@ -128,15 +129,18 @@ public class RCMFunction{
             tmpCost = recyclableItemPrices.get(tmp.getMaterialType()).calculateCost(tmpWeight);
 
             if(currentMoney.getDouble() - tmpCost.getDouble() < 0){
-                RCMTransaction.post(tmpCost.toString(), ID, tmpWeight, tmp.getMaterialType(), 0);
+               // RCMTransaction.post(tmpCost.toString(), ID, tmpWeight, tmp.getMaterialType(), 0);
                 sumWeight += tmpWeight;
                 coupon.add(tmpCost);
+                numItems++;
+                sessionCounter++;
                 continue;
             }
-            RCMTransaction.post(tmpCost.toString(), ID, tmpWeight, tmp.getMaterialType(), 0);
+           // RCMTransaction.post(tmpCost.toString(), ID, tmpWeight, tmp.getMaterialType(), 0);
             sumWeight += tmpWeight;
             sumCost.addTo(tmpCost.getDollars(), tmpCost.getCents());
             numItems++;
+            sessionCounter++;
         }
         weight += sumWeight;
         double val = (currentMoney.getDouble() - sumCost.getDouble()) * 100;
@@ -144,11 +148,11 @@ public class RCMFunction{
         currentMoney.setCents((int)val);
         if(coupon.getDollars() == 0 && coupon.getCents() == 0) {
             JOptionPane.showMessageDialog(null,
-                    "Recycling Success! Dispensing " + sumCost.toString() + "!");
+                    sumWeight + " lb. and " + sessionCounter + " item recycling success! Dispensing " + sumCost.toString() + "!");
         }
         else{
             JOptionPane.showMessageDialog(null,
-                    "Recycling Success! Dispensing " + sumCost.toString() + " and " +
+                    sumWeight + " lb. and " + sessionCounter + " item recycling success! Dispensing " + sumCost.toString() + " and " +
                             "printing voucher for " + coupon.toString() + "!");
         }
         return sumCost;
