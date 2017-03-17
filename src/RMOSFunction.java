@@ -161,6 +161,9 @@ public class RMOSFunction extends Observable{
     }
 
     public void deleteItem(int i) {
+        for(int j=0;i<RCMList.size();i++) {
+            RCMList.get(i).removeItem(activeRecyclableItems.get(i),i);
+        }
         activeRecyclableItems.remove(i);
 //        notifyObservers(activeRecyclableItems);
     }

@@ -14,6 +14,7 @@ import java.util.Observer;
  * Created by pjaffurs on 3/8/2017.
  */
 public class RCM extends JPanel{
+
     //Counters and operation variables
     private USMoney sessionMoney;
 
@@ -224,7 +225,6 @@ public class RCM extends JPanel{
             dataPanel.add(counterLabels[i]);
         }
 
-
         outputPane.add(dataPanel, BorderLayout.CENTER);
 
         //Recycle subpanel
@@ -244,6 +244,7 @@ public class RCM extends JPanel{
                 list.clear();
                 sessionMoney.setDollars(0);
                 sessionMoney.setCents(0);
+                resetCounterLabels();
                 updateButtons();
                 moneyLabel.setText(sessionMoney.toString());
 
@@ -252,8 +253,9 @@ public class RCM extends JPanel{
         });
         moneyPanel.add(recycleButton);
 
-        updateButtons();
         parseActiveItems(list);
+        updateButtons();
+        repaint();
 //        pack();
 //        setLocationRelativeTo(null);
         setVisible(true);
@@ -322,6 +324,13 @@ public class RCM extends JPanel{
             objectButtons[i].setText(mRCM.getItemNameByIndex(i));
             counterLabels[i].setVisible(true);
             objectLabels[i].setVisible(true);
+        }
+    }
+
+    public void resetCounterLabels() {
+        for(int i=0;i<mRCM.getNumItems();i++) {
+            objectCounters[i] = 0;
+            objectLabels[i].setText("0");
         }
     }
 

@@ -68,7 +68,7 @@ public class USMoney {
      * @version 1.0
      * @date 2017-01-29
      */
-    public USMoney add(USMoney money) {
+    public void add(USMoney money) {
         int newDollars = this.dollars + money.dollars;
         int newCents;
         // convert cents to dollars if more than 99 cents
@@ -78,8 +78,8 @@ public class USMoney {
         } else {
             newCents = this.cents + money.cents;
         }
-        USMoney newMoney = new USMoney(newDollars, newCents);
-        return newMoney;
+        this.dollars = newDollars;
+        this.cents = newCents;
     }
 
     @Override

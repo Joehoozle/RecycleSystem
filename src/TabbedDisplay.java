@@ -13,10 +13,11 @@ public class TabbedDisplay extends JPanel{
         tabbedPane.addTab("RCM1",new RCM(rcmFunction1));
         tabbedPane.addTab("RCM2",new RCM(rcmFunction2));
         add(tabbedPane);
-        tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        setVisible(true);
+//        tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 //        setVisible(true);
-//        repaint();
-//        revalidate();
+        revalidate();
+        repaint();
     }
 
     public static void main(String[] args){
@@ -32,13 +33,18 @@ public class TabbedDisplay extends JPanel{
         rcms.add(rcmFunction2);
         RMOSFunction rmosFunction = new RMOSFunction(rcms);
         RMOS rmos = new RMOS(rmosFunction);
-        rmos.pack();
-        //rmos.revalidate();
 
         frame.add(new TabbedDisplay(rcmFunction1,rcmFunction2));
+<<<<<<< Updated upstream
         //frame.repaint();
         frame.revalidate();
         //frame.pack();
+=======
+        frame.revalidate();
+        frame.repaint();
+        frame.setSize(1920,1080);
+//        frame.pack();
+>>>>>>> Stashed changes
         frame.setVisible(true);
     }
 }
