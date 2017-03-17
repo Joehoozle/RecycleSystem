@@ -63,8 +63,8 @@ public class RMOS extends JFrame {
     private JLabel addRCM;
     private JLabel insertID;
     private JTextField newRCMName;
-    private JLabel newRCMLocation;
-//    private JTextField RCMLocation;
+    private JLabel locationRCM;
+    private JTextField locationFieldRCM;
     private JLabel insertCapacity;
     private JTextField newRCMCapacity;
     private JButton addRCMButton;
@@ -73,7 +73,7 @@ public class RMOS extends JFrame {
     private JTextField editPriceBox;
     private JButton editPriceSubmit;
     private JLabel addNewItem;
-    private JComboBox addNewItemName;
+    private JTextField addNewItemName;
     private JLabel addNewItemPriceLabel;
     private JTextField addNewItemPrice;
     private JButton addNewItemButton;
@@ -117,7 +117,7 @@ public class RMOS extends JFrame {
         RCMMoney = new JLabel("Money");
         RCMItems = new JLabel("Number of Items");
         RCMCapacity = new JLabel("Capacity");
-        RCMLocation = new JLabel("Location");
+        RCMLocation = new JLabel();
         RCMChangeCapacity = new JLabel("Change Money");
         RCMChangeMoneyDollars = new JTextField("Enter dollar value");
         RCMChangeMoneyCents = new JTextField("Enter cents value");
@@ -139,15 +139,17 @@ public class RMOS extends JFrame {
         newRCMName = new JTextField();
         insertCapacity = new JLabel("Insert New RCM Capacity");
         newRCMCapacity = new JTextField();
+        locationRCM = new JLabel("Insert Location");
+        locationFieldRCM = new JTextField();
         addRCMButton = new JButton("Add RCM");
         editItemLabel = new JLabel("Edit Item");
         editItemBox = new JComboBox();
         editItemLabel = new JLabel("Edited Item Price");
         editItemPriceLabel = new JLabel("Edit Price");
         editPriceBox = new JTextField();
-        editPriceSubmit = new JButton("Submit");
+        editPriceSubmit = new JButton("Edit Price");
         addNewItem = new JLabel("Add an Item");
-        addNewItemName = new JComboBox();
+        addNewItemName = new JTextField();
         addNewItemPriceLabel = new JLabel("Item Price Per Pound");
         addNewItemPrice = new JTextField();
         addNewItemButton = new JButton("Add New Item");
@@ -379,61 +381,69 @@ public class RMOS extends JFrame {
 
         constraints.gridx = 0;
         constraints.gridy = 3;
-        ControlPanel.add(addRCMButton,constraints);
+        ControlPanel.add(locationRCM,constraints);
+
+        constraints.gridx = 1;
+        constraints.gridy = 3;
+        ControlPanel.add(locationFieldRCM,constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 4;
+        ControlPanel.add(addRCMButton,constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 5;
         editItemLabel.setFont(new Font("Edit Item",Font.BOLD,20));
         ControlPanel.add(editItemLabel,constraints);
 
         constraints.gridx = 0;
-        constraints.gridy = 5;
+        constraints.gridy = 6;
         ControlPanel.add(editItemBox,constraints);
 
         constraints.gridx = 0;
-        constraints.gridy = 6;
+        constraints.gridy = 7;
         ControlPanel.add(editItemPriceLabel,constraints);
 
         constraints.gridx = 1;
-        constraints.gridy = 6;
+        constraints.gridy = 7;
         ControlPanel.add(editPriceBox,constraints);
 
         constraints.gridx = 0;
-        constraints.gridy = 7;
+        constraints.gridy = 8;
         ControlPanel.add(editPriceSubmit,constraints);
 
         addNewItem.setFont(new Font("Add New Item",Font.BOLD,20));
         constraints.gridx = 0;
-        constraints.gridy = 8;
+        constraints.gridy = 9;
         ControlPanel.add(addNewItem,constraints);
 
         constraints.gridx = 0;
-        constraints.gridy = 9;
+        constraints.gridy = 10;
         ControlPanel.add(addNewItemName,constraints);
 
         constraints.gridx = 0;
-        constraints.gridy = 10;
+        constraints.gridy = 11;
         ControlPanel.add(addNewItemPriceLabel,constraints);
 
         constraints.gridx = 1;
-        constraints.gridy = 10;
+        constraints.gridy = 11;
         ControlPanel.add(addNewItemPrice,constraints);
 
         constraints.gridx = 0;
-        constraints.gridy = 11;
+        constraints.gridy = 12;
         ControlPanel.add(addNewItemButton,constraints);
 
         deleteItemLabel.setFont(new Font("Delete An Item",Font.BOLD,20));
         constraints.gridx = 0;
-        constraints.gridy = 12;
+        constraints.gridy = 13;
         ControlPanel.add(deleteItemLabel,constraints);
 
         constraints.gridx = 0;
-        constraints.gridy = 13;
+        constraints.gridy = 14;
         ControlPanel.add(deleteItemBox,constraints);
 
         constraints.gridx = 0;
-        constraints.gridy = 14;
+        constraints.gridy = 15;
         ControlPanel.add(deleteItemSubmit,constraints);
 
         //---------------------------------------------------------
@@ -556,18 +566,11 @@ public class RMOS extends JFrame {
         RCMChangeMoneyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                mRMOS.editRCMMoney(new USMoney(Integer.parseInt(RCMChangeMoneyDollars.getText()),Integer.parseInt(RCMChangeMoneyCents.getText())),
+                        RCMList.getSelectedIndex());
             }
-        });
 
-//        RCMChangeCapacityButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                String string = RCMChangeMoneyDollars.getText();
-//                editRCMCapacity(RCMList.getSelectedIndex(),Double.parseDouble(string));
-//                updateRCMInformation(RCMList.getSelectedIndex());
-//            }
-//        });
+        });
 
 //        updateStatsList.addActionListener(new ActionListener() {
 //            @Override
@@ -581,16 +584,14 @@ public class RMOS extends JFrame {
         addRCMButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                mRMOS.addRCM(new RCMFunction());
-//                mRMOS.test();
-                postEverything();
+                mRMOS.addRCM(new RCMFunction(locationFieldRCM.getText(),newRCMName.getText(),Integer.parseInt(newRCMCapacity.getText())));
             }
         });
 
         addNewItemButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                mRMOS.addItem((String)addNewItemName.getSelectedItem());
+            public void actionPerformed(ActionEvent e){;
+                mRMOS.addItem((String) addNewItemName.getText(), new USMoney(Integer.parseInt(addNewItemPrice.getText()),0));
                 updateItemComboBoxes();
             }
         });
@@ -598,7 +599,8 @@ public class RMOS extends JFrame {
         editPriceSubmit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mRMOS.editItemPrice(editItemBox.getSelectedIndex(), new USMoney());
+                mRMOS.editItemPrice(editItemBox.getSelectedIndex(),
+                        new USMoney(Integer.parseInt(RCMChangeMoneyDollars.getText()),Integer.parseInt(RCMChangeMoneyDollars.getText())));
             }
         });
 
@@ -678,7 +680,7 @@ public class RMOS extends JFrame {
 //-------------------------------------------------
     public static void main(String[] args) {
         RMOS rmos = new RMOS();
-        rmos.addRCM(new RCMFunction("Las Vegas, CA", "0001", 10, new USMoney(4,4)));
-        rmos.addRCM(new RCMFunction("San Jose, CA", "0002", 12, new USMoney(4,4)));
+        rmos.addRCM(new RCMFunction("Las Vegas, CA", "0001", 10));
+        rmos.addRCM(new RCMFunction("San Jose, CA", "0002", 12));
     }
 }

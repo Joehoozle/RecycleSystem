@@ -14,14 +14,19 @@ public class RCMFunction{
     private String ID;
     private int numItems;
 
-    public RCMFunction(String location, String ID, int capacity, USMoney maxMoney) {
+    public RCMFunction(String location, String ID, int capacity) {
         this.location = location;
         this.ID = ID;
         this.capacity = capacity;
         weight = 0;
         numItems = 0;
+<<<<<<< Updated upstream
         currentMoney = maxMoney;
         this.maxMoney = maxMoney;
+=======
+        currentMoney = new USMoney(0,0);
+        this.maxMoney = new USMoney(200,0);
+>>>>>>> Stashed changes
     }
 
     /////////Getters and Setters\\\\\\\\\

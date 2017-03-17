@@ -10,12 +10,12 @@ import java.util.Observable;
 public class RMOSFunction extends Observable{
     ArrayList<RCMFunction> RCMList;
     ArrayList<RecyclableItem> activeRecyclableItems;
-    HashMap<String,Double> recyclableItemPrices;
+    HashMap<String,USMoney> recyclableItemPrices;
 
     public RMOSFunction() {
         RCMList = new ArrayList<RCMFunction>();
         activeRecyclableItems = new ArrayList<RecyclableItem>();
-        recyclableItemPrices = new HashMap<String, Double>();
+        recyclableItemPrices = new HashMap<String, USMoney>();
     }
     /////////////Database Statistics\\\\\\\\\\\\\
     public void setupStatistics() {
@@ -141,8 +141,9 @@ public class RMOSFunction extends Observable{
         return activeRecyclableItems.get(i).toString();
     }
 
-    public void addItem(String string) {
+    public void addItem(String string, USMoney cost) {
         activeRecyclableItems.add(new RecyclableItem(string));
+        recyclableItemPrices.put(string,cost);
         notifyObservers(activeRecyclableItems);
     }
 
