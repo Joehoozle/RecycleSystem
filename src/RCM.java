@@ -4,7 +4,6 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
@@ -16,7 +15,7 @@ import java.util.Observer;
  */
 public class RCM extends JFrame implements Observer{
     //Counters and operation variables
-    private USMoney tmpMoney;
+    private USMoney sessionMoney;
 
     //RCM Method driver
     private RCMFunction mRCM;
@@ -64,7 +63,7 @@ public class RCM extends JFrame implements Observer{
         container.setLayout(new BorderLayout());
 
         this.mRCM = mRCM;
-        tmpMoney = new USMoney(0,0);
+        sessionMoney = new USMoney(0,0);
 
         Font titleFont = new Font("Title", Font.PLAIN, 20);
         Font entryFont = new Font("Entry", Font.PLAIN, 30);
@@ -160,10 +159,16 @@ public class RCM extends JFrame implements Observer{
                         list.clear();
                     }
                     else{
-                        //TODO: add prices to counter and configure weights
+                        //adds selected item to the list and updates the displayed price
+                        USMoney tmpMoney;
+                        USMoney price;
                         list.add(new RecyclableItem(counterLabels[tmp].getText()));
                         objectCounters[tmp]++;
                         counterLabels[tmp].setText(String.valueOf(objectCounters[tmp]));
+                        tmpMoney = mRCM.getRecyclableItemPrices().get(objectButtons[tmp].getText());
+                        price = tmpMoney.calculateCost(list.get(list.size()-1).getWeight());
+                        sessionMoney.add(price);
+                        moneyLabel.setText(sessionMoney.toString());
                     }
                 }
             });
@@ -184,7 +189,7 @@ public class RCM extends JFrame implements Observer{
         moneyPanel = new JPanel();
         moneyPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         moneyPanel.setBackground(Color.decode("#00BCD4"));
-        moneyLabel = new JLabel(tmpMoney.toString());
+        moneyLabel = new JLabel(sessionMoney.toString());
         Font moneyFont = new Font("Money", Font.BOLD, 45);
         moneyLabel.setFont(moneyFont);
         moneyLabel.setForeground(Color.YELLOW);
@@ -223,6 +228,10 @@ public class RCM extends JFrame implements Observer{
             public void actionPerformed(ActionEvent e){
                 mRCM.recycle(list);
                 list.clear();
+                sessionMoney.setDollars(0);
+                sessionMoney.setCents(0);
+                moneyLabel.setText(sessionMoney.toString());
+                //TODO: implement a pop-up for the actual money returned and the
             }
         });
         recyclePanel.add(recycleButton, BorderLayout.SOUTH);
@@ -279,7 +288,7 @@ public class RCM extends JFrame implements Observer{
             else {
                 String typeText = list.get(i).getMaterialType();
                 objectCounters[i] = 0;
-                objectButtons[i].setText(typeText + ": " + mRCM.getRecyclableItemPrices().get(typeText) + "/lb");
+                objectButtons[i].setText(typeText + ": " + mRCM.getRecyclableItemPrices().get(typeText).toString() + "/lb");
                 objectButtons[i].setVisible(true);
                 objectLabels[i].setText(list.get(i).getMaterialType());
                 objectLabels[i].setVisible(true);

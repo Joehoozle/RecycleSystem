@@ -14,6 +14,7 @@ public class RCMFunction{
     private String location;
     private String ID;
     private int numItems;
+    //private ArrayList<RecyclableItem> activeRecyclableItems;
     private HashMap<String, USMoney> recyclableItemPrices;
 
     public RCMFunction(String location, String ID, int capacity) {
@@ -24,7 +25,6 @@ public class RCMFunction{
         numItems = 0;
         this.maxMoney = new USMoney(200, 0);
         currentMoney = maxMoney;
-
     }
 
     /////////Getters and Setters\\\\\\\\\
@@ -122,7 +122,7 @@ public class RCMFunction{
         currentMoney.setCents((int)val);
         return sumCost;
     }
-
+/*
     public void logTransaction(ArrayList<RecyclableItem> items, ArrayList<String> sales) {
         RecyclableItem item;
         String sale;
@@ -131,5 +131,5 @@ public class RCMFunction{
             sale = sales.get(i);
             RCMTransaction.post("90",ID,item.getWeight(),item.getMaterialType(),0);
         }
-    }
+    }*/
 }
