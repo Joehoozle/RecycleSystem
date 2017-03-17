@@ -13,7 +13,7 @@ import java.util.Observer;
  * Class RCM
  * Created by pjaffurs on 3/8/2017.
  */
-public class RCM extends JLabel implements Observer{
+public class RCM extends JPanel{
     //Counters and operation variables
     private USMoney sessionMoney;
 
@@ -238,7 +238,7 @@ public class RCM extends JLabel implements Observer{
                 //TODO: implement a pop-up for the actual money returned and the
             }
         });
-        recyclePanel.add(recycleButton, BorderLayout.SOUTH);
+        moneyPanel.add(recycleButton);
 
         updateButtons();
         parseActiveItems(list);
