@@ -6,8 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * Class RCM
@@ -176,6 +174,9 @@ public class RCM extends JPanel{
                     if(single.isSelected()){
                         RecyclableItem item = new RecyclableItem(objectButtons[tmp].getText());
                         runningWeight(item.getWeight());
+                        if(mRCM.isFull()){
+                            return;
+                        }
                         list.add(item);
                         mRCM.recycle(list);
                         list.clear();
@@ -186,6 +187,12 @@ public class RCM extends JPanel{
                         USMoney price;
                         RecyclableItem item = new RecyclableItem(objectButtons[tmp].getText());
                         runningWeight(item.getWeight());
+                        if(mRCM.isFull()){
+                            list.clear();
+                            resetCounterLabels();
+                            sessionMoney = new USMoney(0,0);
+                            return;
+                        }
                         list.add(item);
                         objectCounters[tmp]++;
                         counterLabels[tmp].setText(String.valueOf(objectCounters[tmp]));
@@ -290,13 +297,6 @@ public class RCM extends JPanel{
         disabled.setVisible(true);
     }
 
-    public void update(Observable o, Object arg){
-
-        ArrayList<RecyclableItem> available = (ArrayList<RecyclableItem>) arg;
-
-        parseActiveItems(available);
-    }
-
     /**
      * parseActiveItems()
      * Parses the ArrayList of items, activating and initializing
@@ -340,12 +340,15 @@ public class RCM extends JPanel{
         for(int i=0;i<objectCounters.length;i++) {
             objectCounters[i] = 0;
             counterLabels[i].setText("0");
+            moneyLabel.setText(sessionMoney.toString());
         }
     }
 
     public void runningWeight(double weight) {
         if(mRCM.getWeight() + weight > mRCM.getCapacity()) {
-            JOptionPane.showMessageDialog(null,"The RCM has reached capacity!","Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,"The RCM has reached capacity! Session Aborted!","Error",JOptionPane.ERROR_MESSAGE);
+            mRCM.setFull(true);
+            return;
         }
         mRCM.addWeight(weight);
     }

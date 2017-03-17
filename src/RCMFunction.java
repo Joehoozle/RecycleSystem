@@ -8,6 +8,7 @@ import java.util.HashMap;
  * Created by dantedg on 3/14/2017.
  */
 public class RCMFunction{
+    private boolean full;
     private double capacity;
     private double weight;
     private USMoney maxMoney;
@@ -21,6 +22,7 @@ public class RCMFunction{
     private HashMap<String, Integer> itemCounts;
 
     public RCMFunction(String location, String ID, int capacity) {
+        full = false;
         this.location = location;
         this.ID = ID;
         this.capacity = capacity;
@@ -34,6 +36,14 @@ public class RCMFunction{
     }
 
     /////////Getters and Setters\\\\\\\\\
+    public boolean isFull(){
+        return full;
+    }
+
+    public void setFull(boolean b){
+        full = b;
+    }
+
     public int getNumItems() {
         return numItems;
     }
@@ -142,7 +152,6 @@ public class RCMFunction{
             numItems++;
             sessionCounter++;
         }
-        weight += sumWeight;
         double val = (currentMoney.getDouble() - sumCost.getDouble()) * 100;
         currentMoney.setDollars(0);
         currentMoney.setCents((int)val);
