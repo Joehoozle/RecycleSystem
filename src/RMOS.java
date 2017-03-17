@@ -616,7 +616,7 @@ public class RMOS extends JFrame {
                 RCMChangeMoneyButton.setEnabled(true);
                 RCMEmpty.setEnabled(true);
                 RCMOffAlert.setEnabled(false);
-                postEverything();
+                mRMOS.deactivateRCM(RCMList.getSelectedIndex());
             }
         });
 
@@ -629,6 +629,7 @@ public class RMOS extends JFrame {
                 RCMChangeMoneyButton.setEnabled(false);
                 RCMEmpty.setEnabled(false);
                 RCMOffAlert.setEnabled(true);
+                mRMOS.activateRCM(RCMList.getSelectedIndex());
             }
         });
 
@@ -645,6 +646,7 @@ public class RMOS extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 mRMOS.editRCMMoney(new USMoney(Integer.parseInt(RCMChangeMoneyDollars.getText()), Integer.parseInt(RCMChangeMoneyCents.getText())),
                         RCMList.getSelectedIndex());
+                updateRCMInformation(RCMList.getSelectedIndex());
             }
 
         });

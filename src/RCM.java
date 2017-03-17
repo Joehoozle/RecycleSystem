@@ -141,6 +141,11 @@ public class RCM extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 updateButtons();
+                if(!mRCM.isActivated()) {
+                    activate();
+                } else {
+                    deactivate();
+                }
             }
         });
         optionPanel.add(updateButton);
@@ -169,7 +174,9 @@ public class RCM extends JPanel{
                 public void actionPerformed(ActionEvent e) {
                     JButton button = (JButton) e.getSource();
                     if(single.isSelected()){
-                        list.add(new RecyclableItem(objectLabels[tmp].getText()));
+                        RecyclableItem item = new RecyclableItem(objectLabels[tmp].getText());
+                        runningWeight(item.getWeight());
+                        list.add(item);
                         mRCM.recycle(list);
                         list.clear();
                     }
@@ -177,7 +184,9 @@ public class RCM extends JPanel{
                         //adds selected item to the list and updates the displayed price
                         USMoney tmpMoney;
                         USMoney price;
-                        list.add(new RecyclableItem(objectLabels[tmp].getText()));
+                        RecyclableItem item = new RecyclableItem(objectLabels[tmp].getText());
+                        runningWeight(item.getWeight());
+                        list.add(item);
                         objectCounters[tmp]++;
                         counterLabels[tmp].setText(String.valueOf(objectCounters[tmp]));
                         tmpMoney = mRCM.getRecyclableItemPrices().get(objectButtons[tmp].getText());
@@ -245,16 +254,13 @@ public class RCM extends JPanel{
                 sessionMoney.setDollars(0);
                 sessionMoney.setCents(0);
                 resetCounterLabels();
-                updateButtons();
                 moneyLabel.setText(sessionMoney.toString());
 
                 //TODO: implement a pop-up for the actual money returned and the
             }
         });
         moneyPanel.add(recycleButton);
-
         parseActiveItems(list);
-        updateButtons();
         repaint();
 //        pack();
 //        setLocationRelativeTo(null);
@@ -263,6 +269,7 @@ public class RCM extends JPanel{
 
     ////////////////////// OPERATION METHODS //////////////////////
     public void activate(){
+        mRCM.setIsActive(true);
         recycleButton.setEnabled(true);
         single.setEnabled(true);
         multiple.setEnabled(true);
@@ -273,6 +280,7 @@ public class RCM extends JPanel{
     }
 
     public void deactivate(){
+        mRCM.setIsActive(false);
         recycleButton.setEnabled(false);
         single.setEnabled(false);
         multiple.setEnabled(false);
@@ -328,10 +336,17 @@ public class RCM extends JPanel{
     }
 
     public void resetCounterLabels() {
-        for(int i=0;i<mRCM.getNumItems();i++) {
+        for(int i=0;i<objectCounters.length;i++) {
             objectCounters[i] = 0;
             objectLabels[i].setText("0");
         }
+    }
+
+    public void runningWeight(double weight) {
+        if(mRCM.getWeight() + weight > mRCM.getCapacity()) {
+            JOptionPane.showMessageDialog(null,"The RCM has reached capacity!","Error",JOptionPane.ERROR_MESSAGE);
+        }
+        mRCM.addWeight(weight);
     }
 
 

@@ -138,6 +138,14 @@ public class RMOSFunction extends Observable{
         RCMList.get(i).empty();
     }
 
+    public void activateRCM(int i) {
+        RCMList.get(i).setIsActive(true);
+    }
+
+    public void deactivateRCM(int i) {
+        RCMList.get(i).setIsActive(false);
+    }
+
     /////////////Item Manipulation\\\\\\\\\\\\\\\
     public int getActiveItemNumber() {
         return activeRecyclableItems.size();
@@ -165,7 +173,6 @@ public class RMOSFunction extends Observable{
             RCMList.get(i).removeItem(activeRecyclableItems.get(i),i);
         }
         activeRecyclableItems.remove(i);
-//        notifyObservers(activeRecyclableItems);
     }
 
     public USMoney getItemPrice(int i) {

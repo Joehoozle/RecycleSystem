@@ -15,6 +15,7 @@ public class RCMFunction{
     private String location;
     private String ID;
     private int numItems;
+    private boolean isActivated;
     private ArrayList<RecyclableItem> activeRecyclableItems;
     private HashMap<String, USMoney> recyclableItemPrices;
     private HashMap<String, Integer> itemCounts;
@@ -63,6 +64,10 @@ public class RCMFunction{
 
     public void setWeight(double weight) {
         this.weight = weight;
+    }
+
+    public void addWeight(double itemWeight) {
+        this.weight += itemWeight;
     }
 
     public USMoney getMaxMoney(){ return maxMoney; }
@@ -155,12 +160,20 @@ public class RCMFunction{
     }
 
     public void removeItem(RecyclableItem item, int index) {
-        recyclableItemPrices.remove(item.getMaterialType());
+//        recyclableItemPrices.remove(item.getMaterialType());
         activeRecyclableItems.remove(index);
     }
 
     public USMoney getItemPrice(String item) {
         return recyclableItemPrices.get("item");
+    }
+
+    public void setIsActive(boolean b) {
+        this.isActivated = b;
+    }
+
+    public boolean isActivated() {
+        return isActivated;
     }
 /*
     public void logTransaction(ArrayList<RecyclableItem> items, ArrayList<String> sales) {
