@@ -160,7 +160,7 @@ public class RCMFunction{
     }
 
     public void removeItem(RecyclableItem item, int index) {
-//        recyclableItemPrices.remove(item.getMaterialType());
+        recyclableItemPrices.remove(item.getMaterialType());
         activeRecyclableItems.remove(index);
     }
 

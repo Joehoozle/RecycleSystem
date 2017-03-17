@@ -142,9 +142,9 @@ public class RCM extends JPanel{
             public void actionPerformed(ActionEvent e) {
                 updateButtons();
                 if(!mRCM.isActivated()) {
-                    activate();
-                } else {
                     deactivate();
+                } else {
+                    activate();
                 }
             }
         });
@@ -174,7 +174,7 @@ public class RCM extends JPanel{
                 public void actionPerformed(ActionEvent e) {
                     JButton button = (JButton) e.getSource();
                     if(single.isSelected()){
-                        RecyclableItem item = new RecyclableItem(objectLabels[tmp].getText());
+                        RecyclableItem item = new RecyclableItem(objectButtons[tmp].getText());
                         runningWeight(item.getWeight());
                         list.add(item);
                         mRCM.recycle(list);
@@ -184,7 +184,7 @@ public class RCM extends JPanel{
                         //adds selected item to the list and updates the displayed price
                         USMoney tmpMoney;
                         USMoney price;
-                        RecyclableItem item = new RecyclableItem(objectLabels[tmp].getText());
+                        RecyclableItem item = new RecyclableItem(objectButtons[tmp].getText());
                         runningWeight(item.getWeight());
                         list.add(item);
                         objectCounters[tmp]++;
@@ -338,7 +338,7 @@ public class RCM extends JPanel{
     public void resetCounterLabels() {
         for(int i=0;i<objectCounters.length;i++) {
             objectCounters[i] = 0;
-            objectLabels[i].setText("0");
+            counterLabels[i].setText("0");
         }
     }
 

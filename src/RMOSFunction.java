@@ -169,8 +169,8 @@ public class RMOSFunction extends Observable{
     }
 
     public void deleteItem(int i) {
-        for(int j=0;i<RCMList.size();i++) {
-            RCMList.get(i).removeItem(activeRecyclableItems.get(i),i);
+        for(int j=0;j<RCMList.size();j++) {
+            RCMList.get(j).removeItem(activeRecyclableItems.get(i),i);
         }
         activeRecyclableItems.remove(i);
     }
@@ -182,9 +182,8 @@ public class RMOSFunction extends Observable{
     public void editItemPrice(int i, USMoney price) {
         recyclableItemPrices.put(activeRecyclableItems.get(i).getMaterialType(),price);
         for(int j = 0; j < RCMList.size(); j++){
-            RCMList.get(j).setRecyclableItemPrices(activeRecyclableItems.get(i).toString(), price);
+            RCMList.get(j).setRecyclableItemPrices(activeRecyclableItems.get(i).getMaterialType(), price);
         }
-        notifyObservers(activeRecyclableItems);
     }
 
     public String getNumberOfItems(int i) {
