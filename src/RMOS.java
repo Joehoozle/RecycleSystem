@@ -50,9 +50,7 @@ public class RMOS extends JFrame {
 
     //Statistic Menu
     private JPanel StatisticPanel;
-    //    private JComboBox pickRCM; //default should be showing for all RCMs
     private JTextArea statsList;
-    //    private JButton updateStatsList;
     private JComboBox<String> pickStat;
     private JLabel statsListLabel;
     private ArrayList<JLabel> itemPrices;
@@ -124,7 +122,6 @@ public class RMOS extends JFrame {
                         container.setVisible(true);
                         container.revalidate();
                         container.repaint();
-                        painter();
                         dispose();
                     }
                 }
@@ -609,7 +606,7 @@ public class RMOS extends JFrame {
                 RCMChangeMoneyDollars.setEnabled(true);
                 RCMChangeMoneyButton.setEnabled(true);
                 RCMEmpty.setEnabled(true);
-                RCMOffAlert.setVisible(false);
+                RCMOffAlert.setEnabled(false);
             }
         });
 
@@ -621,7 +618,7 @@ public class RMOS extends JFrame {
                 RCMChangeMoneyDollars.setEnabled(false);
                 RCMChangeMoneyButton.setEnabled(false);
                 RCMEmpty.setEnabled(false);
-                RCMOffAlert.setVisible(true);
+                RCMOffAlert.setEnabled(true);
             }
         });
 
@@ -678,9 +675,14 @@ public class RMOS extends JFrame {
             }
         });
 
-//        pack();
-//        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        setLocationRelativeTo(null);
+        updateRCMComboBoxes();
+        RCMTurnOn.doClick();
+
+
+        pack();
+        revalidate();
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 
@@ -719,11 +721,6 @@ public class RMOS extends JFrame {
             itemPrices.get(i).setVisible(true);
             itemPrices.get(i).setText(mRMOS.getItemNameByIndex(i) + ": " + mRMOS.getItemPrice(i));
         }
-    }
-
-    public void painter() {
-        repaint();
-        revalidate();
     }
 
     //function to add/edit RCMs------------------------------------

@@ -26,12 +26,15 @@ public class TabbedDisplay extends JPanel{
         RCMFunction rcmFunction2 = new RCMFunction("Park", "0002",500);
 
         //Add content to the window.
-        frame.add(new TabbedDisplay(rcmFunction1,rcmFunction2));
         ArrayList<RCMFunction> rcms = new ArrayList<RCMFunction>();
         rcms.add(rcmFunction1);
         rcms.add(rcmFunction2);
         RMOSFunction rmosFunction = new RMOSFunction(rcms);
         RMOS rmos = new RMOS(rmosFunction);
+        rmos.pack();
+        rmos.revalidate();
+
+        frame.add(new TabbedDisplay(rcmFunction1,rcmFunction2));
         frame.repaint();
         frame.revalidate();
         frame.pack();
