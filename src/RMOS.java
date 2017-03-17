@@ -1,7 +1,9 @@
+import com.sun.security.auth.module.JndiLoginModule;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.util.Log;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 public class RMOS extends JFrame {
 
     RMOSFunction mRMOS;
+    Container container;
 
     //4 panels for main screen
     private JPanel panel1;
@@ -47,9 +50,9 @@ public class RMOS extends JFrame {
 
     //Statistic Menu
     private JPanel StatisticPanel;
-//    private JComboBox pickRCM; //default should be showing for all RCMs
+    //    private JComboBox pickRCM; //default should be showing for all RCMs
     private JTextArea statsList;
-//    private JButton updateStatsList;
+    //    private JButton updateStatsList;
     private JComboBox<String> pickStat;
     private JLabel statsListLabel;
     private ArrayList<JLabel> itemPrices;
@@ -86,21 +89,63 @@ public class RMOS extends JFrame {
     private JLabel deleteItemLabel;
     private JLabel editItemPriceLabel;
 
-
     //TODO: Make a login screen
-    public RMOS() {
-        RMOSUI();
+
+
+    public class LoginFrame extends JFrame {
+        //Log in screen
+        private JTextField username;
+        private JPasswordField password;
+        private JButton loginButton;
+        private JPanel loginBox;
+        private Container loginScreen;
+
+        public LoginFrame() {
+            username = new JTextField();
+            password = new JPasswordField();
+            loginButton = new JButton("Submit");
+            loginBox = new JPanel();
+            loginScreen = getContentPane();
+            container.setVisible(false);
+
+            loginScreen.setLayout(new FlowLayout());
+            loginBox.setLayout(new BoxLayout(loginBox, BoxLayout.Y_AXIS));
+            loginBox.add(loginButton, JButton.CENTER);
+            loginScreen.add(loginBox);
+            password.setPreferredSize(new Dimension(200, 20));
+            loginBox.add(password, JLabel.CENTER);
+            username.setPreferredSize(new Dimension(200, 20));
+            loginBox.add(username, JLabel.CENTER);
+            loginScreen.setSize(new Dimension(200, 20));
+            loginButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (username.getText().equals("admin") && (String.copyValueOf(password.getPassword()).equals("test"))) {
+                        container.setVisible(true);
+                        container.revalidate();
+                        container.repaint();
+                        dispose();
+                    }
+                }
+            });
+            pack();
+        }
     }
 
-    public void RMOSUI() {
-        try{
+
+    public RMOS(RMOSFunction rmosFunction) {
+        try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        container = getContentPane();
+
+        LoginFrame login = new LoginFrame();
+        login.setVisible(true);
 
         //All of the
-        mRMOS = new RMOSFunction();
+        mRMOS = rmosFunction;
 
         //break the screen into 4 blocked panels
         panel1 = new JPanel();
@@ -123,16 +168,12 @@ public class RMOS extends JFrame {
         RCMCapacity = new JLabel("Capacity");
         RCMLocation = new JLabel();
         RCMChangeCapacity = new JLabel("Change Money");
-        RCMChangeMoneyDollars = new JTextField("Enter dollar value");
-        RCMChangeMoneyCents = new JTextField("Enter cents value");
+        RCMChangeMoneyDollars = new JTextField("Dollar");
+        RCMChangeMoneyCents = new JTextField("Cents");
         RCMCapacityChangeError = new JLabel("No errors at this point");
-//        RCMChangeButton = new JButton("Change RCM");
         RCMChangeMoneyButton = new JButton("Change Money");
         RCMEmpty = new JButton("Empty");
-//        chooseRCM = new JLabel("Choose RCM");
-//        RCMStatus = new JLabel("Status");
         RCMInformation = new JLabel("RCM Information");
-//        RCMStatus = new JLabel("status");
         RCMTurnOn = new JButton("Turn On");
         RCMTurnOff = new JButton("Turn Off");
         RCMOffAlert = new JLabel("RCM Is Off");
@@ -156,15 +197,15 @@ public class RMOS extends JFrame {
         addNewItem = new JLabel("Add an Item");
         addNewItemName = new JTextField();
         addNewItemPriceLabel = new JLabel("Item Price Per Pound");
-        addNewItemPriceDollars = new JTextField("Enter Dollars");
-        addNewItemPriceCents = new JTextField("Enter Cents");
+        addNewItemPriceDollars = new JTextField("Dollars");
+        addNewItemPriceCents = new JTextField("Cents");
         addNewItemButton = new JButton("Add New Item");
         deleteItemLabel = new JLabel("Delete an Item");
         deleteItemBox = new JComboBox();
         deleteItemSubmit = new JButton("Delete Item");
 
         statsListLabel = new JLabel("Statistics");
-       itemPrices = new ArrayList<JLabel>();
+        itemPrices = new ArrayList<JLabel>();
         itemPrice1 = new JLabel("item");
         itemPrice2 = new JLabel("item");
         itemPrice3 = new JLabel("item");
@@ -177,15 +218,16 @@ public class RMOS extends JFrame {
         itemPrices.add(itemPrice4);
         itemPrices.add(itemPrice5);
         itemPrices.add(itemPrice6);
-        for(int i = 0; i < 6; i++) {
+        for (int i = 0; i < 6; i++) {
             itemPrices.get(i).setVisible(false);
         }
         pickStat = new JComboBox<String>();
         statsList = new JTextArea();
 //        updateStatsList = new JButton("Stats");
 
-        Container container = getContentPane();
-        container.setLayout(new GridLayout(1,4,20,0));
+        //TODO: Does this work?
+//        container = getContentPane();
+        container.setLayout(new GridLayout(1, 4, 20, 0));
 //        container.setBackground(Color.decode("#B388FF"));
 
         panel1.setLayout(new GridBagLayout());
@@ -217,7 +259,7 @@ public class RMOS extends JFrame {
         constraints.gridy = 1;
         constraints.weighty = 0.7;
         constraints.weightx = 0.7;
-        panel1.add(RCMPanel,constraints);
+        panel1.add(RCMPanel, constraints);
 
         constraints.ipadx = 0;
         constraints.weightx = 0.15;
@@ -238,7 +280,7 @@ public class RMOS extends JFrame {
         constraints.gridy = 1;
         constraints.weighty = 0.7;
         constraints.weightx = 0.7;
-        panel2.add(GraphPanel,constraints);
+        panel2.add(GraphPanel, constraints);
 
         constraints.ipadx = 0;
         constraints.weightx = 0.15;
@@ -259,7 +301,7 @@ public class RMOS extends JFrame {
         constraints.gridy = 1;
         constraints.weighty = 0.7;
         constraints.weightx = 0.7;
-        panel3.add(StatisticPanel,constraints);
+        panel3.add(StatisticPanel, constraints);
 
         constraints.weightx = 0.15;
         constraints.weighty = 0.15;
@@ -279,93 +321,93 @@ public class RMOS extends JFrame {
         constraints.gridy = 0;
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridwidth = 2;
-        constraints.insets = new Insets(0,25,0,25);
-        RCMPanel.add(RCMList,constraints);
+        constraints.insets = new Insets(0, 25, 0, 25);
+        RCMPanel.add(RCMList, constraints);
 
 //        constraints.insets = new Insets(0,,0,0);
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridx = 0;
         constraints.gridy = 2;
         constraints.gridwidth = 1;
-        RCMLabel.setFont(new Font("RCM",Font.BOLD,30));
-        RCMPanel.add(RCMLabel,constraints);
+        RCMLabel.setFont(new Font("RCM", Font.BOLD, 30));
+        RCMPanel.add(RCMLabel, constraints);
 
         RCMOffAlert.setForeground(Color.red);
         constraints.gridx = 1;
         constraints.gridy = 2;
         constraints.gridwidth = 1;
-        RCMOffAlert.setFont(new Font("RCM Is Off",Font.BOLD,20));
-        RCMPanel.add(RCMOffAlert,constraints);
+        RCMOffAlert.setFont(new Font("RCM Is Off", Font.BOLD, 20));
+        RCMPanel.add(RCMOffAlert, constraints);
 
-        constraints.insets = new Insets(0,50,0,50);
+        constraints.insets = new Insets(0, 50, 0, 50);
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridwidth = 1;
         constraints.gridx = 0;
         constraints.gridy = 3;
         RCMPanel.add(RCMTurnOn, constraints);
 
-        constraints.insets = new Insets(0,25,0,25);
+        constraints.insets = new Insets(0, 25, 0, 25);
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.weightx = 0.5;
         constraints.gridx = 1;
         constraints.gridy = 3;
         RCMPanel.add(RCMTurnOff, constraints);
 
-        RCMInformation.setFont(new Font("RCM Information",Font.BOLD,20));
+        RCMInformation.setFont(new Font("RCM Information", Font.BOLD, 20));
         constraints.gridx = 0;
         constraints.gridy = 4;
-        RCMPanel.add(RCMInformation,constraints);
+        RCMPanel.add(RCMInformation, constraints);
 
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.gridx = 0;
         constraints.gridy = 5;
-        RCMPanel.add(RCMWeight,constraints);
+        RCMPanel.add(RCMWeight, constraints);
 
         constraints.gridx = 1;
         constraints.gridy = 5;
-        RCMPanel.add(RCMEmpty,constraints);
+        RCMPanel.add(RCMEmpty, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 6;
-        RCMPanel.add(RCMCapacity,constraints);
+        RCMPanel.add(RCMCapacity, constraints);
 
         constraints.gridx = 1;
         constraints.gridy = 6;
-        RCMPanel.add(RCMItems,constraints);
+        RCMPanel.add(RCMItems, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 7;
-        RCMPanel.add(RCMMoney,constraints);
+        RCMPanel.add(RCMMoney, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 8;
-        RCMPanel.add(RCMLocation,constraints);
+        RCMPanel.add(RCMLocation, constraints);
 
-        RCMChangeCapacity.setFont(new Font("Change Money",Font.BOLD,20));
+        RCMChangeCapacity.setFont(new Font("Change Money", Font.BOLD, 20));
         constraints.gridx = 0;
         constraints.gridy = 9;
         constraints.anchor = GridBagConstraints.CENTER;
-        RCMPanel.add(RCMChangeCapacity,constraints);
+        RCMPanel.add(RCMChangeCapacity, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 10;
         constraints.anchor = GridBagConstraints.CENTER;
-        RCMPanel.add(RCMChangeMoneyDollars,constraints);
+        RCMPanel.add(RCMChangeMoneyDollars, constraints);
 
         constraints.gridx = 1;
         constraints.gridy = 10;
-        RCMPanel.add(RCMCapacityChangeError,constraints);
+        RCMPanel.add(RCMCapacityChangeError, constraints);
 
         constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.insets = new Insets(0,25,0,25);
+        constraints.insets = new Insets(0, 25, 0, 25);
         constraints.gridx = 0;
         constraints.gridy = 11;
-        RCMPanel.add(RCMChangeMoneyCents,constraints);
+        RCMPanel.add(RCMChangeMoneyCents, constraints);
 
-        constraints.insets = new Insets(0,25,0,25);
+        constraints.insets = new Insets(0, 25, 0, 25);
         constraints.gridx = 1;
         constraints.gridy = 11;
-        RCMPanel.add(RCMChangeMoneyButton,constraints);
+        RCMPanel.add(RCMChangeMoneyButton, constraints);
 
         //---------------------------------------------------------
 
@@ -376,149 +418,149 @@ public class RMOS extends JFrame {
 
         constraints.gridx = 0;
         constraints.gridy = 0;
-        addRCM.setFont(new Font("Add RCM",Font.BOLD,20));
-        ControlPanel.add(addRCM,constraints);
+        addRCM.setFont(new Font("Add RCM", Font.BOLD, 20));
+        ControlPanel.add(addRCM, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 1;
-        ControlPanel.add(insertID,constraints);
+        ControlPanel.add(insertID, constraints);
 
         constraints.gridx = 1;
         constraints.gridy = 1;
-        ControlPanel.add(newRCMName,constraints);
+        ControlPanel.add(newRCMName, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 2;
-        ControlPanel.add(insertCapacity,constraints);
+        ControlPanel.add(insertCapacity, constraints);
 
         constraints.gridx = 1;
         constraints.gridy = 2;
-        ControlPanel.add(newRCMCapacity,constraints);
+        ControlPanel.add(newRCMCapacity, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 3;
-        ControlPanel.add(locationRCM,constraints);
+        ControlPanel.add(locationRCM, constraints);
 
         constraints.gridx = 1;
         constraints.gridy = 3;
-        ControlPanel.add(locationFieldRCM,constraints);
+        ControlPanel.add(locationFieldRCM, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 4;
-        ControlPanel.add(addRCMButton,constraints);
+        ControlPanel.add(addRCMButton, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 5;
-        editItemLabel.setFont(new Font("Edit Item",Font.BOLD,20));
-        ControlPanel.add(editItemLabel,constraints);
+        editItemLabel.setFont(new Font("Edit Item", Font.BOLD, 20));
+        ControlPanel.add(editItemLabel, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 6;
-        ControlPanel.add(editItemBox,constraints);
+        ControlPanel.add(editItemBox, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 7;
-        ControlPanel.add(editItemPriceLabel,constraints);
+        ControlPanel.add(editItemPriceLabel, constraints);
 
         constraints.gridx = 1;
         constraints.gridy = 7;
-        ControlPanel.add(editItemPriceDollars,constraints);
+        ControlPanel.add(editItemPriceDollars, constraints);
 
         constraints.gridx = 2;
         constraints.gridy = 7;
-        ControlPanel.add(editItemPriceCents,constraints);
+        ControlPanel.add(editItemPriceCents, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 8;
-        ControlPanel.add(editPriceSubmit,constraints);
+        ControlPanel.add(editPriceSubmit, constraints);
 
-        addNewItem.setFont(new Font("Add New Item",Font.BOLD,20));
+        addNewItem.setFont(new Font("Add New Item", Font.BOLD, 20));
         constraints.gridx = 0;
         constraints.gridy = 9;
-        ControlPanel.add(addNewItem,constraints);
+        ControlPanel.add(addNewItem, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 10;
-        ControlPanel.add(addNewItemName,constraints);
+        ControlPanel.add(addNewItemName, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 11;
-        ControlPanel.add(addNewItemPriceLabel,constraints);
+        ControlPanel.add(addNewItemPriceLabel, constraints);
 
         constraints.gridx = 1;
         constraints.gridy = 11;
-        ControlPanel.add(addNewItemPriceDollars,constraints);
+        ControlPanel.add(addNewItemPriceDollars, constraints);
 
         constraints.gridx = 2;
         constraints.gridy = 11;
-        ControlPanel.add(addNewItemPriceCents,constraints);
+        ControlPanel.add(addNewItemPriceCents, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 12;
-        ControlPanel.add(addNewItemButton,constraints);
+        ControlPanel.add(addNewItemButton, constraints);
 
-        deleteItemLabel.setFont(new Font("Delete An Item",Font.BOLD,20));
+        deleteItemLabel.setFont(new Font("Delete An Item", Font.BOLD, 20));
         constraints.gridx = 0;
         constraints.gridy = 13;
-        ControlPanel.add(deleteItemLabel,constraints);
+        ControlPanel.add(deleteItemLabel, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 14;
-        ControlPanel.add(deleteItemBox,constraints);
+        ControlPanel.add(deleteItemBox, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 15;
-        ControlPanel.add(deleteItemSubmit,constraints);
+        ControlPanel.add(deleteItemSubmit, constraints);
 
         //---------------------------------------------------------
         StatisticPanel.setLayout(new GridBagLayout());
 
-        constraints.insets = new Insets(0,170,0,0);
-        statsListLabel.setFont(new Font("Statistics",Font.BOLD,30));
+        constraints.insets = new Insets(0, 170, 0, 0);
+        statsListLabel.setFont(new Font("Statistics", Font.BOLD, 30));
         constraints.gridx = 0;
         constraints.gridy = 0;
-        StatisticPanel.add(statsListLabel,constraints);
+        StatisticPanel.add(statsListLabel, constraints);
 
-        constraints.insets = new Insets(0,25,0,25);
+        constraints.insets = new Insets(0, 25, 0, 25);
         constraints.gridx = 0;
         constraints.gridy = 1;
-        StatisticPanel.add(itemPrice1,constraints);
+        StatisticPanel.add(itemPrice1, constraints);
 
-        constraints.insets = new Insets(0,25,0,25);
+        constraints.insets = new Insets(0, 25, 0, 25);
         constraints.gridx = 1;
         constraints.gridy = 1;
-        StatisticPanel.add(itemPrice2,constraints);
+        StatisticPanel.add(itemPrice2, constraints);
 
-        constraints.insets = new Insets(0,25,0,25);
+        constraints.insets = new Insets(0, 25, 0, 25);
         constraints.gridx = 0;
         constraints.gridy = 2;
-        StatisticPanel.add(itemPrice3,constraints);
+        StatisticPanel.add(itemPrice3, constraints);
 
-        constraints.insets = new Insets(0,25,0,25);
+        constraints.insets = new Insets(0, 25, 0, 25);
         constraints.gridx = 1;
         constraints.gridy = 2;
-        StatisticPanel.add(itemPrice4,constraints);
+        StatisticPanel.add(itemPrice4, constraints);
 
-        constraints.insets = new Insets(0,25,0,25);
+        constraints.insets = new Insets(0, 25, 0, 25);
         constraints.gridx = 0;
         constraints.gridy = 3;
-        StatisticPanel.add(itemPrice5,constraints);
+        StatisticPanel.add(itemPrice5, constraints);
 
-        constraints.insets = new Insets(0,25,0,25);
+        constraints.insets = new Insets(0, 25, 0, 25);
         constraints.gridx = 1;
         constraints.gridy = 3;
-        StatisticPanel.add(itemPrice6,constraints);
+        StatisticPanel.add(itemPrice6, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 4;
         constraints.gridwidth = 2;
         constraints.gridheight = 1;
-        StatisticPanel.add(pickStat,constraints);
+        StatisticPanel.add(pickStat, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 5;
         constraints.gridheight = 1;
-        StatisticPanel.add(statsList,constraints);
+        StatisticPanel.add(statsList, constraints);
 
         //--------------------------------------------------------
 
@@ -530,7 +572,7 @@ public class RMOS extends JFrame {
             }
         };
 
-        GraphPanel.setLayout(new GridLayout(2,1));
+        GraphPanel.setLayout(new GridLayout(2, 1));
         DefaultPieDataset data = new DefaultPieDataset();
         data.setValue("this", new Double(40));
         data.setValue("that", new Double(60));
@@ -590,32 +632,25 @@ public class RMOS extends JFrame {
         RCMChangeMoneyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mRMOS.editRCMMoney(new USMoney(Integer.parseInt(RCMChangeMoneyDollars.getText()),Integer.parseInt(RCMChangeMoneyCents.getText())),
+                mRMOS.editRCMMoney(new USMoney(Integer.parseInt(RCMChangeMoneyDollars.getText()), Integer.parseInt(RCMChangeMoneyCents.getText())),
                         RCMList.getSelectedIndex());
             }
 
         });
 
-//        updateStatsList.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                mRMOS.setupStatistics();
-//                updateRCMComboBoxes();
-//            }
-//        });
-
         //TODO: Fix, as we are using this to test
         addRCMButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mRMOS.addRCM(new RCMFunction(locationFieldRCM.getText(),newRCMName.getText(),Integer.parseInt(newRCMCapacity.getText())));
+                mRMOS.addRCM(new RCMFunction(locationFieldRCM.getText(), newRCMName.getText(), Integer.parseInt(newRCMCapacity.getText())));
             }
         });
 
         addNewItemButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e){;
-                mRMOS.addItem((String) addNewItemName.getText(), new USMoney(Integer.parseInt(addNewItemPriceDollars.getText()),Integer.parseInt(addNewItemPriceCents.getText())));
+            public void actionPerformed(ActionEvent e) {
+                ;
+                mRMOS.addItem((String) addNewItemName.getText(), new USMoney(Integer.parseInt(addNewItemPriceDollars.getText()), Integer.parseInt(addNewItemPriceCents.getText())));
                 updateItemComboBoxesAdd();
                 updateItemPriceInformation();
             }
@@ -625,7 +660,7 @@ public class RMOS extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mRMOS.editItemPrice(editItemBox.getSelectedIndex(),
-                        new USMoney(Integer.parseInt(editItemPriceDollars.getText()),Integer.parseInt(editItemPriceCents.getText())));
+                        new USMoney(Integer.parseInt(editItemPriceDollars.getText()), Integer.parseInt(editItemPriceCents.getText())));
                 updateItemPriceInformation();
             }
         });
@@ -647,7 +682,7 @@ public class RMOS extends JFrame {
 
     //functions to update UI-----------------------------------
     public void updateRCMComboBoxes() {
-        for(int i = RCMList.getItemCount();i<mRMOS.getRCMNumber();i++) {
+        for (int i = RCMList.getItemCount(); i < mRMOS.getRCMNumber(); i++) {
             RCMList.addItem(mRMOS.getRCMName(i));
         }
     }
@@ -662,21 +697,21 @@ public class RMOS extends JFrame {
     }
 
     public void updateItemComboBoxesAdd() {
-        deleteItemBox.addItem(mRMOS.getActiveItemName(mRMOS.getActiveItemNumber()-1));
-        editItemBox.addItem(mRMOS.getActiveItemName(mRMOS.getActiveItemNumber()-1));
+        deleteItemBox.addItem(mRMOS.getActiveItemName(mRMOS.getActiveItemNumber() - 1));
+        editItemBox.addItem(mRMOS.getActiveItemName(mRMOS.getActiveItemNumber() - 1));
     }
 
-    public void updateItemComboBoxesDelete(int i){
+    public void updateItemComboBoxesDelete(int i) {
         deleteItemBox.removeItemAt(i);
         editItemBox.removeItemAt(i);
         revalidate();
     }
 
     public void updateItemPriceInformation() {
-        for(int i = 0; i < 6; i++) {
+        for (int i = 0; i < 6; i++) {
             itemPrices.get(i).setVisible(false);
         }
-        for(int i =0; i<mRMOS.getActiveItemNumber(); i++) {
+        for (int i = 0; i < mRMOS.getActiveItemNumber(); i++) {
             itemPrices.get(i).setVisible(true);
             itemPrices.get(i).setText(mRMOS.getItemNameByIndex(i) + ": " + mRMOS.getItemPrice(i));
         }
@@ -688,12 +723,12 @@ public class RMOS extends JFrame {
         updateRCMComboBoxes();
     }
 
-    public void editRCMMoney(USMoney money,int index) {
-        mRMOS.editRCMMoney(money,index);
+    public void editRCMMoney(USMoney money, int index) {
+        mRMOS.editRCMMoney(money, index);
     }
 
-    public void editRCMCapacity(int index, double capacity){
-        mRMOS.editRCMCapacity(index,capacity);
+    public void editRCMCapacity(int index, double capacity) {
+        mRMOS.editRCMCapacity(index, capacity);
     }
 
     public void emptyRCM(int index) {
@@ -702,7 +737,7 @@ public class RMOS extends JFrame {
 //functions to add/edit items
 
     public void addNewItem(String name, USMoney price) {
-        mRMOS.addItem(name,price);
+        mRMOS.addItem(name, price);
     }
 
 
@@ -722,11 +757,6 @@ public class RMOS extends JFrame {
 //        }
         statsList.setText(string);
     }
+}
 
 //-------------------------------------------------
-    public static void main(String[] args) {
-        RMOS rmos = new RMOS();
-        rmos.addRCM(new RCMFunction("Las Vegas, CA", "0001", 10));
-        rmos.addRCM(new RCMFunction("San Jose, CA", "0002", 12));
-    }
-}

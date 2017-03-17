@@ -12,8 +12,8 @@ public class RMOSFunction extends Observable{
     ArrayList<RecyclableItem> activeRecyclableItems;
     HashMap<String,USMoney> recyclableItemPrices;
 
-    public RMOSFunction() {
-        RCMList = new ArrayList<RCMFunction>();
+    public RMOSFunction(ArrayList<RCMFunction> RCMList) {
+        this.RCMList = RCMList;
         activeRecyclableItems = new ArrayList<RecyclableItem>();
         recyclableItemPrices = new HashMap<String, USMoney>();
     }
@@ -78,6 +78,8 @@ public class RMOSFunction extends Observable{
         }
         return ID;
     }
+
+//    public String getMostRecent
 
     //////////RCM Manipulation\\\\\\\\\\\\\\
     private void updateRCMList() {
@@ -163,6 +165,7 @@ public class RMOSFunction extends Observable{
     public void editItemPrice(int i, USMoney price) {
         recyclableItemPrices.put(activeRecyclableItems.get(i).getMaterialType(),price);
     }
+
     public String getNumberOfItems(int i) {
         return Integer.toString(RCMList.get(i).getNumItems());
     }
