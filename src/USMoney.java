@@ -91,4 +91,19 @@ public class USMoney {
             string = "$" + Integer.toString(dollars) + "." + Integer.toString(cents);
         return string;
     }
+
+    public double getDouble(){
+        return dollars + ((double) cents / 100);
+    }
+
+    public USMoney calculateCost(double weight){
+        double dollarPart = weight * (double) (dollars * 100);
+        double centPart = weight * (double) cents;
+        int cost = (int) Math.round(dollarPart) + (int) Math.round(centPart);
+        return new USMoney(0, cost);
+    }
+
+    public int compareTo(USMoney money2){
+        return (cents + dollars * 100) - (money2.getCents() + money2.getDollars() * 100);
+    }
 }

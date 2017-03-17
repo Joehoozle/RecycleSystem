@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Class RCMFunction
@@ -13,6 +14,7 @@ public class RCMFunction{
     private String location;
     private String ID;
     private int numItems;
+    private HashMap<String, USMoney> recyclableItemPrices;
 
     public RCMFunction(String location, String ID, int capacity) {
         this.location = location;
@@ -20,13 +22,9 @@ public class RCMFunction{
         this.capacity = capacity;
         weight = 0;
         numItems = 0;
-//<<<<<<< Updated upstream
-//        this.maxMoney = new USMoney(200,0);
-//        currentMoney = maxMoney;
-//=======
-//        currentMoney = new USMoney(200,0);
-//        this.maxMoney = new USMoney(200,0);
-//>>>>>>> Stashed changes
+        this.maxMoney = new USMoney(200, 0);
+        currentMoney = maxMoney;
+
     }
 
     /////////Getters and Setters\\\\\\\\\
@@ -85,6 +83,8 @@ public class RCMFunction{
         return "RCM: " + ID + " in " + location;
     }
 
+    public void setRecyclableItemPrices(HashMap<String, USMoney> itemPrices) { this.recyclableItemPrices = itemPrices; }
+
     ////////////////////// OPERATION METHODS //////////////////////
     public void empty(){
         weight = 0;
@@ -94,10 +94,27 @@ public class RCMFunction{
 
     //What gets called when an item gets recycled
     public void recycle(ArrayList<RecyclableItem> recyclables) {
-        numItems++;
+        double tmpWeight;
+        double sumWeight = 0;
+        USMoney tmpCost;
+        USMoney sumCost = new USMoney(0, 0);
         for(RecyclableItem tmp : recyclables){
-            //RCMTransaction.post();
+            tmpWeight = tmp.getWeight();
+
+            tmpCost = recyclableItemPrices.get(tmp.getMaterialType()).calculateCost(tmpWeight);
+
+            if(currentMoney.getDouble() - tmpCost.getDouble() < 0){
+                break;
+            }
+            RCMTransaction.post(tmpCost.toString(), ID, tmpWeight, tmp.getMaterialType(), 0);
+            sumWeight += tmpWeight;
+            sumCost.addTo(tmpCost.getDollars(), tmpCost.getCents());
         }
+        weight += sumWeight;
+        double val = (currentMoney.getDouble() - sumCost.getDouble()) * 100;
+        currentMoney.setDollars(0);
+        currentMoney.setCents((int)val);
+
     }
 
     public void logTransaction(ArrayList<RecyclableItem> items, ArrayList<String> sales) {
