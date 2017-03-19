@@ -1,3 +1,5 @@
+package Backend;
+
 import java.util.Random;
 
 /**
@@ -16,16 +18,12 @@ public class RecyclableItem {
         return materialType;
     }
 
-    public void setMaterialType(String materialType) {
-        this.materialType = materialType;
-    }
-
     public double getWeight() {
         return weight;
     }
 
     private void setWeight() {
         Random r = new Random();
-        this.weight = r.nextDouble() * 10.0;
+        this.weight = r.nextDouble() * 5.0;
     }
 }

@@ -1,6 +1,9 @@
+package UI;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import Backend.*;
 
 /**
  * Created by PJ on 3/16/2017.
@@ -14,8 +17,6 @@ public class TabbedDisplay extends JPanel{
         tabbedPane.addTab("RCM2",new RCM(rcmFunction2));
         add(tabbedPane);
         setVisible(true);
-//        tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-//        setVisible(true);
         revalidate();
         repaint();
     }
@@ -36,13 +37,8 @@ public class TabbedDisplay extends JPanel{
 
         frame.add(new TabbedDisplay(rcmFunction1,rcmFunction2));
         frame.toBack();
-        //frame.repaint();
         frame.revalidate();
-        //frame.pack();
         frame.repaint();
-        frame.setSize(1920,1080);
-//        frame.pack();
-
         frame.setVisible(true);
     }
 }

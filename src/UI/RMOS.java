@@ -1,18 +1,17 @@
-import com.sun.security.auth.module.JndiLoginModule;
-import javafx.scene.chart.Chart;
+package UI;
+
+import Backend.RCMFunction;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
-import org.jfree.util.Log;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import Backend.*;
 
 /**
  * Created by Dante on 3/8/2017.
@@ -33,7 +32,7 @@ public class RMOS extends JFrame {
     private JComboBox<String> RCMList;
     private JLabel RCMLabel;
     private JLabel RCMInformation;
-    private JButton RCMTurnOn; //TODO: Add functionality for on and off
+    private JButton RCMTurnOn;
     private JButton RCMTurnOff;
     private JLabel RCMOffAlert;
     private JLabel RCMWeight;
@@ -42,7 +41,7 @@ public class RMOS extends JFrame {
     private JButton RCMEmpty;
     private JLabel RCMMoney;
     private JLabel RCMLocation;
-    private JLabel RCMChangeCapacity; //TODO: Make sure that when we change this we check that it is a number and that the weight is not greater
+    private JLabel RCMChangeCapacity;
     private JTextField RCMChangeMoneyDollars;
     private JTextField RCMChangeMoneyCents;
     private JLabel RCMCapacityChangeError;
@@ -112,8 +111,6 @@ public class RMOS extends JFrame {
             loginScreen = getContentPane();
             container.setVisible(false);
 
-
-
             loginScreen.setLayout(new FlowLayout());
             loginBox.setLayout(new BoxLayout(loginBox, BoxLayout.Y_AXIS));
             loginBox.add(loginButton, JButton.CENTER);
@@ -140,7 +137,7 @@ public class RMOS extends JFrame {
 
 
     public RMOS(RMOSFunction rmosFunction) {
-        super("RMOS");
+        super("UI.RMOS");
         setSize(new Dimension(1920, 1080));
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -232,20 +229,12 @@ public class RMOS extends JFrame {
         }
         pickStat = new JComboBox<String>();
         statsList = new JTextArea();
-//        updateStatsList = new JButton("Stats");
-
-        //TODO: Does this work?
-//        container = getContentPane();
         container.setLayout(new GridLayout(1, 4, 20, 0));
-//        container.setBackground(Color.decode("#B388FF"));
 
         panel1.setLayout(new GridBagLayout());
-//        panel1.setBackground(Color.decode("#B388FF"));
         panel2.setLayout(new GridBagLayout());
-//        panel2.setBackground(Color.decode("#B388FF"));
         panel3.setLayout(new GridBagLayout());
         panel3.setOpaque(true);
-//        panel3.setBackground(Color.decode("#B388FF"));
         panel4.setLayout(new GridBagLayout());
 
         GridBagConstraints constraints = new GridBagConstraints();
@@ -605,11 +594,14 @@ public class RMOS extends JFrame {
         pickStat.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(RCMList.getSelectedIndex() == 1) {
-                    statsList.setText(mRMOS.smallestTimestamp());
+                statsList.setText("");
+                if(RCMList.getSelectedIndex() == 0) {
+                    statsList.insert(mRMOS.smallestTimestamp(),0);
                 } else if(RCMList.getSelectedIndex() == 1) {
-                    statsList.setText(mRMOS.mostRecycles());
+                    statsList.insert(mRMOS.mostRecycles(),0);
                 }
+                statsList.revalidate();
+                statsList.repaint();
             }
         });
 
@@ -709,13 +701,9 @@ public class RMOS extends JFrame {
         pack();
         login.toFront();
         login.repaint();
-//        revalidate();
-//        setUndecorated(true);
-//        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
-        //setSize(new Dimension(1920,1080));
     }
 
     //functions to update UI-----------------------------------
@@ -786,34 +774,8 @@ public class RMOS extends JFrame {
         }
     }
 
-    //function to add/edit RCMs------------------------------------
-    public void addRCM(RCMFunction rcm) {
-        mRMOS.addRCM(rcm);
-        updateRCMComboBoxes();
-    }
-
-    public void editRCMMoney(USMoney money, int index) {
-        mRMOS.editRCMMoney(money, index);
-    }
-
-    public void editRCMCapacity(int index, double capacity) {
-        mRMOS.editRCMCapacity(index, capacity);
-    }
-
     public void emptyRCM(int index) {
         mRMOS.empty(index);
-    }
-//functions to add/edit items
-
-    public void addNewItem(String name, USMoney price) {
-        mRMOS.addItem(name, price);
-    }
-
-
-    //functions to pull statistic data
-    public void postEverything() {
-        //mRMOS.setupStatistics();
-        //mRMOS.getAllEntries();
     }
 }
 

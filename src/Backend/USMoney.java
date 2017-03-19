@@ -1,3 +1,4 @@
+package Backend;
 
 /**
  * Created by dantedg on 1/29/2017.
@@ -5,8 +6,6 @@
 public class USMoney {
     private int dollars;
     private int cents;
-
-    public USMoney() {}
 
     public USMoney(int dollars, int cents) {
         // convert cents to dollars if more than 99 cents
@@ -42,8 +41,8 @@ public class USMoney {
 
     /**
      * This method adds two integers dollars and cents to the current
-     * USMoney object and places these new values in the
-     * current USMoney object while returning void
+     * Backend.USMoney object and places these new values in the
+     * current Backend.USMoney object while returning void
      *
      * @author Dante Dalla Gasperina
      * @version 1.0
@@ -61,8 +60,8 @@ public class USMoney {
     }
 
     /**
-     * This method adds a USMoney object to the current USMoney object
-     * and returns a new USMoney object with the added values
+     * This method adds a Backend.USMoney object to the current Backend.USMoney object
+     * and returns a new Backend.USMoney object with the added values
      *
      * @author Dante Dalla Gasperina
      * @version 1.0

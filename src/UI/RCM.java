@@ -1,3 +1,6 @@
+package UI;
+
+import Backend.RCMFunction;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -6,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
+import Backend.*;
 
 /**
  * Class RCM
@@ -55,11 +59,6 @@ public class RCM extends JPanel{
         catch(Exception e){
             e.printStackTrace();
         }
-
-//        setExtendedState(JFrame.MAXIMIZED_BOTH);
-//        setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-//        Container container = getContentPane();
         Container container = new Container();
         container.setLayout(new BorderLayout());
         add(container);
@@ -70,7 +69,6 @@ public class RCM extends JPanel{
         Font titleFont = new Font("Title", Font.PLAIN, 20);
         Font entryFont = new Font("Entry", Font.PLAIN, 30);
 
-        //Initializing button status for single recycling
         recycleButton = new JButton();
         recycleButton.setEnabled(false);
 
@@ -139,11 +137,11 @@ public class RCM extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 updateButtons();
-                if(!mRCM.isActivated()) {
-                    deactivate();
-                } else {
-                    activate();
-                }
+//                if(!mRCM.isActivated()) {
+//                    activate();
+//                } else {
+//                    deactivate();
+//                }
             }
         });
         optionPanel.add(updateButton);
@@ -271,14 +269,11 @@ public class RCM extends JPanel{
         moneyPanel.add(recycleButton);
         parseActiveItems(list);
         repaint();
-//        pack();
-//        setLocationRelativeTo(null);
         setVisible(true);
     }
 
     ////////////////////// OPERATION METHODS //////////////////////
     public void activate(){
-        mRCM.setIsActive(true);
         recycleButton.setEnabled(true);
         single.setEnabled(true);
         multiple.setEnabled(true);
@@ -289,7 +284,6 @@ public class RCM extends JPanel{
     }
 
     public void deactivate(){
-        mRCM.setIsActive(false);
         recycleButton.setEnabled(false);
         single.setEnabled(false);
         multiple.setEnabled(false);
@@ -307,7 +301,7 @@ public class RCM extends JPanel{
      * @param list      list of items accepted by RCMs
      */
     public void parseActiveItems(ArrayList<RecyclableItem> list){
-        HashMap<String,USMoney> prices = mRCM.getRecyclableItemPrices();
+        HashMap<String, USMoney> prices = mRCM.getRecyclableItemPrices();
         for(int i = 0; i < 6;i++) {
             if (i >= list.size()) {
                 objectButtons[i].setVisible(false);
@@ -353,15 +347,5 @@ public class RCM extends JPanel{
             return;
         }
         mRCM.addWeight(weight);
-    }
-
-
-
-    ////////////////////////// MAIN ////////////////////////////
-    public static void main(String[] args){
-        RCMFunction rcmFunction = new RCMFunction("park","0001",200);
-        rcmFunction.addItem(new RecyclableItem("glass"), new USMoney(4,40));
-        rcmFunction.addItem(new RecyclableItem("aluminum"), new USMoney(5,50));
-        RCM rcm = new RCM(rcmFunction);
     }
 }

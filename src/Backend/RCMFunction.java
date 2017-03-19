@@ -1,13 +1,12 @@
+package Backend;
 
 import javax.swing.*;
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
 /**
- * Class RCMFunction
+ * Class Backend.RCMFunction
  * Created by dantedg on 3/14/2017.
  */
 public class RCMFunction{
@@ -25,9 +24,6 @@ public class RCMFunction{
     private HashMap<String, Integer> itemCounts;
     private int recycleCounter;
     private Date timeStamp;
-
-
-
 
     public Date getTimeStamp() {
         return timeStamp;
@@ -136,7 +132,7 @@ public class RCMFunction{
         recyclableItemPrices.get(key).setCents(price.getCents());
     }
 
-    public HashMap<String,USMoney> getRecyclableItemPrices() { return recyclableItemPrices; }
+    public HashMap<String, USMoney> getRecyclableItemPrices() { return recyclableItemPrices; }
 
     ////////////////////// OPERATION METHODS //////////////////////
     public void empty(){
@@ -165,16 +161,13 @@ public class RCMFunction{
             tmpCost = recyclableItemPrices.get(tmp.getMaterialType()).calculateCost(tmpWeight);
             sub = currentMoney.getDollars() - tmpCost.getDouble();
             if(sub < 0.0){
-               // RCMTransaction.post(tmpCost.toString(), ID, tmpWeight, tmp.getMaterialType(), 0);
                 sumWeight += tmpWeight;
                 coupon.add(tmpCost);
                 sessionCounter++;
                 continue;
             }
-           // RCMTransaction.post(tmpCost.toString(), ID, tmpWeight, tmp.getMaterialType(), 0);
             sumWeight += tmpWeight;
             sumCost.addTo(tmpCost.getDollars(), tmpCost.getCents());
-//            numItems++;
             sessionCounter++;
             currentMoney.setDollars(0);
             sub *= 100.0;
@@ -231,14 +224,4 @@ public class RCMFunction{
             return -1;
         }
     }
-/*
-    public void logTransaction(ArrayList<RecyclableItem> items, ArrayList<String> sales) {
-        RecyclableItem item;
-        String sale;
-        for(int i=0;i<items.size();i++) {
-            item = items.get(i);
-            sale = sales.get(i);
-            RCMTransaction.post("90",ID,item.getWeight(),item.getMaterialType(),0);
-        }
-    }*/
 }

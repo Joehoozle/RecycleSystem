@@ -1,6 +1,5 @@
-import java.lang.reflect.Array;
-import java.net.URL;
-import java.sql.*;
+package Backend;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
@@ -18,72 +17,6 @@ public class RMOSFunction extends Observable {
         activeRecyclableItems = new ArrayList<RecyclableItem>();
         recyclableItemPrices = new HashMap<String, USMoney>();
     }
-    /////////////Database Statistics\\\\\\\\\\\\\
-    /*public void setupStatistics() {
-        Connection con = null;
-        try {
-            String URL = "jdbc:sqlite:C:\\Users\\dantedg\\Documents\\ClassFiles\\ObjectOriented\\RecycleSystem\\RCMdata";
-            con = DriverManager.getConnection(URL);
-            System.out.print("Got connected!");
-            String query = "CREATE TABLE IF NOT EXISTS RCMTransactions (" +
-                    "id INTEGER PRIMARY KEY," +
-                    "RCMId INTEGER," +
-                    "sale TEXT," +
-                    "material TEXT," +
-                    "weight REAL," +
-                    "timeStamp DateTime DEFAULT CURRENT_TIMESTAMP," +
-                    "emptyFlag INTEGER );";
-            Statement statement = con.createStatement();
-            statement.execute(query);
-            System.out.println("Table was created alright");
-        } catch(SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (con != null) {
-                    System.out.print("Closing");
-                    con.close();
-                }
-            } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
-            }
-        }
-    }*/
-
-    /*public String getAllEntries() {
-        Connection con = null;
-        ResultSet result = null;
-        String ID ="";
-        try {
-            String URL = "jdbc:sqlite:C:\\Users\\dantedg\\Documents\\ClassFiles\\ObjectOriented\\RecycleSystem\\RCMdata";
-            con = DriverManager.getConnection(URL);
-            System.out.print("Got connected!");
-            String query = "SELECT weight FROM RCMTransactions;";
-            Statement statement = con.createStatement();
-            result = statement.executeQuery(query);
-            System.out.println("Table was created alright");
-            if (result.next()) {
-                ID = result.getString(1);
-            }
-            while(result.next()) {
-                String weight = result.getString(1);
-            }
-        } catch(SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (con != null) {
-                    System.out.print("Closing");
-                    con.close();
-                }
-            } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
-            }
-        }
-        return ID;
-    }*/
-
-//    public String getMostRecent
 
     //////////RCM Manipulation\\\\\\\\\\\\\\
     private void updateRCMList() {
@@ -165,7 +98,6 @@ public class RMOSFunction extends Observable {
         for (int i = 0; i < RCMList.size(); i++) {
             RCMList.get(i).addItem(new RecyclableItem(string), cost);
         }
-//        notifyObservers(activeRecyclableItems);
     }
 
     public void deleteItem(int i) {
@@ -195,9 +127,9 @@ public class RMOSFunction extends Observable {
     }
 
     public String smallestTimestamp() {
-        if (RCMList.get(0).getTimeStamp().compareTo(RCMList.get(1).getTimeStamp()) > 0) {
+        if (RCMList.get(0).getTimeStamp().compareTo(RCMList.get(1).getTimeStamp()) < 0) {
             return RCMList.get(1).getID() + ": " + RCMList.get(0).getTimeStamp();
-        } else if (RCMList.get(0).getTimeStamp().compareTo(RCMList.get(1).getTimeStamp()) < 0) {
+        } else if (RCMList.get(0).getTimeStamp().compareTo(RCMList.get(1).getTimeStamp()) >= 0) {
             return RCMList.get(0).getID();
         } else {
             return "error";
