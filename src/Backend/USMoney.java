@@ -2,11 +2,14 @@ package Backend;
 
 /**
  * Created by dantedg on 1/29/2017.
+ *
+ * This class is a helper class that deals with Money logic and visualization
  */
 public class USMoney {
     private int dollars;
     private int cents;
 
+    //constructor
     public USMoney(int dollars, int cents) {
         // convert cents to dollars if more than 99 cents
         if(cents > 99) {
@@ -95,6 +98,8 @@ public class USMoney {
         return dollars + ((double) cents / 100);
     }
 
+
+    //this is a special method that takes in the weight of an object and returns a USMoney object representing the multiplication
     public USMoney calculateCost(double weight){
         double dollarPart = weight * (double) (dollars * 100);
         double centPart = weight * (double) cents;
@@ -102,6 +107,7 @@ public class USMoney {
         return new USMoney(0, cost);
     }
 
+    //compares two USMoney objects
     public int compareTo(USMoney money2){
         return (cents + dollars * 100) - (money2.getCents() + money2.getDollars() * 100);
     }

@@ -46,15 +46,16 @@ public class RMOS extends JFrame {
     private JTextField RCMChangeMoneyCents;
     private JLabel RCMCapacityChangeError;
     private JButton RCMChangeMoneyButton;
+    private JButton RCMUpdateButton;
 
     //modify menu items
     private JPanel GraphPanel;
     private ChartPanel chart1;
     private ChartPanel chart2;
 
-    //Statistic Menu
+    //statistic Menu
     private JPanel StatisticPanel;
-    private JTextArea statsList;
+    private JLabel statsList;
     private JComboBox<String> pickStat;
     private JLabel statsListLabel;
     private ArrayList<JLabel> itemPrices;
@@ -65,7 +66,7 @@ public class RMOS extends JFrame {
     private JLabel itemPrice5;
     private JLabel itemPrice6;
 
-    //Control Panel
+    //control panel
     private JPanel ControlPanel;
     private JLabel addRCM;
     private JLabel insertID;
@@ -92,6 +93,7 @@ public class RMOS extends JFrame {
     private JLabel editItemPriceLabel;
 
 
+    //Login nested class that requires a user to log in before accessing the RMOS
     public class LoginFrame extends JFrame {
         //Log in screen
         private JTextField username;
@@ -120,6 +122,8 @@ public class RMOS extends JFrame {
             username.setPreferredSize(new Dimension(200, 20));
             loginBox.add(username, JLabel.CENTER);
             loginScreen.setSize(new Dimension(400, 100));
+
+            //what happens when the submit button is pushed
             loginButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -134,23 +138,23 @@ public class RMOS extends JFrame {
             pack();
         }
     }
-
-
+    //constructor
     public RMOS(RMOSFunction rmosFunction) {
-        super("UI.RMOS");
+        super("RMOS");
         setSize(new Dimension(1920, 1080));
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         container = new Container();
         add(container);
 
         LoginFrame login = new LoginFrame();
         login.setVisible(true);
 
-        //All of the
+        //RMOSFunctional that was passed in with constuctor
         mRMOS = rmosFunction;
 
         //break the screen into 4 blocked panels
@@ -183,8 +187,9 @@ public class RMOS extends JFrame {
         RCMTurnOn = new JButton("Turn On");
         RCMTurnOff = new JButton("Turn Off");
         RCMOffAlert = new JLabel("RCM Is Off");
+        RCMUpdateButton = new JButton("Update");
 
-
+        //control panel
         addRCM = new JLabel("Add RCM");
         insertID = new JLabel("Insert New RCM ID");
         newRCMName = new JTextField();
@@ -210,6 +215,7 @@ public class RMOS extends JFrame {
         deleteItemBox = new JComboBox();
         deleteItemSubmit = new JButton("Delete Item");
 
+        //statistics panel
         statsListLabel = new JLabel("Statistics");
         itemPrices = new ArrayList<JLabel>();
         itemPrice1 = new JLabel("item");
@@ -228,9 +234,10 @@ public class RMOS extends JFrame {
             itemPrices.get(i).setVisible(false);
         }
         pickStat = new JComboBox<String>();
-        statsList = new JTextArea();
+        statsList = new JLabel();
         container.setLayout(new GridLayout(1, 4, 20, 0));
 
+        //using a gridbaglayout for layout
         panel1.setLayout(new GridBagLayout());
         panel2.setLayout(new GridBagLayout());
         panel3.setLayout(new GridBagLayout());
@@ -244,6 +251,9 @@ public class RMOS extends JFrame {
         GraphPanel.setBackground(Color.decode("#A9A9A9"));
         StatisticPanel.setBackground(Color.decode("#A9A9A9"));
         ControlPanel.setBackground(Color.decode("#A9A9A9"));
+
+
+        //////// Grid Bag Layout Setup  ///////???
 
         // Set up the size of panel 1 with constraints
         constraints.weightx = 0.15;
@@ -312,7 +322,7 @@ public class RMOS extends JFrame {
         container.add(panel3);
         container.add(ControlPanel);
 
-        //---------------------------------------------------------------------
+        //-------------------------------------
         RCMPanel.setLayout(new GridBagLayout());
 
         constraints.weightx = 1;
@@ -324,7 +334,6 @@ public class RMOS extends JFrame {
         constraints.insets = new Insets(0, 25, 0, 25);
         RCMPanel.add(RCMList, constraints);
 
-//        constraints.insets = new Insets(0,,0,0);
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridx = 0;
         constraints.gridy = 2;
@@ -357,6 +366,10 @@ public class RMOS extends JFrame {
         constraints.gridx = 0;
         constraints.gridy = 4;
         RCMPanel.add(RCMInformation, constraints);
+
+        constraints.gridx = 1;
+        constraints.gridy = 4;
+        RCMPanel.add(RCMUpdateButton, constraints);
 
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.gridx = 0;
@@ -409,9 +422,7 @@ public class RMOS extends JFrame {
         constraints.gridy = 11;
         RCMPanel.add(RCMChangeMoneyButton, constraints);
 
-        //---------------------------------------------------------
-
-//        constraints = new GridBagConstraints();
+        //----------------------------------------------------
 
         ControlPanel.setLayout(new GridBagLayout());
         constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -564,7 +575,8 @@ public class RMOS extends JFrame {
 
         //--------------------------------------------------------
 
-        //Initial graph setup
+        /////// Graph Setup /////////
+
         Comparable key = new Comparable() {
             @Override
             public int compareTo(Object o) {
@@ -591,17 +603,19 @@ public class RMOS extends JFrame {
         pickStat.addItem("RCM Least Recently Emptied");
         pickStat.addItem("RCM with Most Recycles");
 
+        //////// Action Listeners for Buttons and Comboboxes //////////
+
         pickStat.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                statsList.setText("");
-                if(RCMList.getSelectedIndex() == 0) {
-                    statsList.insert(mRMOS.smallestTimestamp(),0);
-                } else if(RCMList.getSelectedIndex() == 1) {
-                    statsList.insert(mRMOS.mostRecycles(),0);
-                }
-                statsList.revalidate();
-                statsList.repaint();
+                updateStatsList();
+            }
+        });
+        RCMUpdateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateRCMInformation(RCMList.getSelectedIndex());
+                updateRCMComboBoxes();
             }
         });
 
@@ -618,10 +632,11 @@ public class RMOS extends JFrame {
                 RCMTurnOn.setEnabled(false);
                 RCMTurnOff.setEnabled(true);
                 RCMChangeMoneyDollars.setEnabled(true);
+                RCMChangeMoneyCents.setEnabled(true);
                 RCMChangeMoneyButton.setEnabled(true);
                 RCMEmpty.setEnabled(true);
                 RCMOffAlert.setEnabled(false);
-                mRMOS.deactivateRCM(RCMList.getSelectedIndex());
+                mRMOS.activateRCM(RCMList.getSelectedIndex());
             }
         });
 
@@ -631,10 +646,11 @@ public class RMOS extends JFrame {
                 RCMTurnOn.setEnabled(true);
                 RCMTurnOff.setEnabled(false);
                 RCMChangeMoneyDollars.setEnabled(false);
+                RCMChangeMoneyCents.setEnabled(false);
                 RCMChangeMoneyButton.setEnabled(false);
                 RCMEmpty.setEnabled(false);
                 RCMOffAlert.setEnabled(true);
-                mRMOS.activateRCM(RCMList.getSelectedIndex());
+                mRMOS.deactivateRCM(RCMList.getSelectedIndex());
             }
         });
 
@@ -657,7 +673,6 @@ public class RMOS extends JFrame {
 
         });
 
-        //TODO: Fix, as we are using this to test
         addRCMButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -695,8 +710,6 @@ public class RMOS extends JFrame {
 
         updateRCMComboBoxes();
         RCMTurnOn.doClick();
-
-
         setPreferredSize(new Dimension(1920,1080));
         pack();
         login.toFront();
@@ -706,14 +719,17 @@ public class RMOS extends JFrame {
         setVisible(true);
     }
 
-    //functions to update UI-----------------------------------
-    public void updateRCMComboBoxes() {
+    ///////////// Update Functions ////////////////
+
+    //update RCM comboboxes when new RCMs are added or deleted
+    private void updateRCMComboBoxes() {
         for (int i = RCMList.getItemCount(); i < mRMOS.getRCMNumber(); i++) {
             RCMList.addItem(mRMOS.getRCMName(i));
         }
     }
 
-    public void updateRCMInformation(int i) {
+    //Update the information on the RCM panel as well as the graphs and statistics
+    private void updateRCMInformation(int i) {
         RCMWeight.setText("Weight: " + mRMOS.getRCMWeight(i));
         RCMCapacity.setText("Capacity: " + mRMOS.getRCMCapacity(i));
         RCMLabel.setText("RCM: " + mRMOS.getRCMID(i));
@@ -721,18 +737,38 @@ public class RMOS extends JFrame {
         RCMItems.setText("Items: " + mRMOS.getNumberOfItems(i));
         RCMMoney.setText("Money: " + mRMOS.getRCMMoney(i));
         updateGraphs();
+        updateStatsList();
     }
 
-    public void updateGraphs() {
+    //Updates the current statistic
+    private void updateStatsList() {
+        statsList.setText("");
+        if(pickStat.getSelectedIndex() == 0) {
+            statsList.setText(mRMOS.smallestTimestamp());
+        } else if(pickStat.getSelectedIndex() == 1) {
+            statsList.setText(mRMOS.mostRecycles());
+        }
+        statsList.revalidate();
+        statsList.repaint();
+    }
+
+    //updates the graphs
+    private void updateGraphs() {
         DefaultPieDataset data1 = new DefaultPieDataset();
         DefaultPieDataset data2 = new DefaultPieDataset();
 
         for(int i=0;i<mRMOS.getActiveItemNumber();i++) {
-            if (mRMOS.getNumberOfItems(0) > 0 && mRMOS.getNumberOfItems(1) > 0) {
+            if (mRMOS.getNumberOfItems(0) > 0) {
                 int temp1 = (((mRMOS.fetchItemNumbers(mRMOS.getItemNameByIndex(i), 0)) * 100) / ((mRMOS.getNumberOfItems(0))));
-                int temp2 = (((mRMOS.fetchItemNumbers(mRMOS.getItemNameByIndex(i), 1))  * 100) / ((mRMOS.getNumberOfItems(1))));
                 data1.setValue(mRMOS.getItemNameByIndex(i), temp1);
+            } else {
+                data1.setValue(mRMOS.getItemNameByIndex(i), 0);
+            }
+            if(mRMOS.getNumberOfItems(1) > 0) {
+                int temp2 = (((mRMOS.fetchItemNumbers(mRMOS.getItemNameByIndex(i), 1))  * 100) / ((mRMOS.getNumberOfItems(1))));
                 data2.setValue(mRMOS.getItemNameByIndex(i), temp2);
+            } else {
+                data2.setValue(mRMOS.getItemNameByIndex(i),0);
             }
         }
         chart1.removeAll();
@@ -753,18 +789,21 @@ public class RMOS extends JFrame {
 
     }
 
-    public void updateItemComboBoxesAdd() {
+    //updates the item comboboxes when a new item is added
+    private void updateItemComboBoxesAdd() {
         deleteItemBox.addItem(mRMOS.getActiveItemName(mRMOS.getActiveItemNumber() - 1));
         editItemBox.addItem(mRMOS.getActiveItemName(mRMOS.getActiveItemNumber() - 1));
     }
 
-    public void updateItemComboBoxesDelete(int i) {
+    //updates the item comboboxes when an item is deleted
+    private void updateItemComboBoxesDelete(int i) {
         deleteItemBox.removeItemAt(i);
         editItemBox.removeItemAt(i);
         revalidate();
     }
 
-    public void updateItemPriceInformation() {
+    //updates the price information of each item on the statistics panel
+    private void updateItemPriceInformation() {
         for (int i = 0; i < 6; i++) {
             itemPrices.get(i).setVisible(false);
         }
@@ -774,9 +813,8 @@ public class RMOS extends JFrame {
         }
     }
 
-    public void emptyRCM(int index) {
+    //empties an RCM of all items
+    private void emptyRCM(int index) {
         mRMOS.empty(index);
     }
 }
-
-//-------------------------------------------------

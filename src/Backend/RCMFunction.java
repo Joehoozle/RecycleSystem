@@ -6,8 +6,10 @@ import java.util.Date;
 import java.util.HashMap;
 
 /**
- * Class Backend.RCMFunction
+ * Class RCMFunction
  * Created by dantedg on 3/14/2017.
+ *
+ * This class does all the backend work for the RCM
  */
 public class RCMFunction{
     private boolean full;
@@ -18,21 +20,14 @@ public class RCMFunction{
     private String location;
     private String ID;
     private int numItems;
-    private boolean isActivated;
-    private ArrayList<RecyclableItem> activeRecyclableItems;
-    private HashMap<String, USMoney> recyclableItemPrices;
-    private HashMap<String, Integer> itemCounts;
-    private int recycleCounter;
-    private Date timeStamp;
+    private boolean isActivated; //depicts whether RCM is on or off
+    private ArrayList<RecyclableItem> activeRecyclableItems; //list of items that can be recycled
+    private HashMap<String, USMoney> recyclableItemPrices; //hash of prices to items
+    private HashMap<String, Integer> itemCounts; //count of each distinct item that has been recycled
+    private int recycleCounter; //total count of items that have been recycled
+    private Date timeStamp; //timestamp to depict last time emptied
 
-    public Date getTimeStamp() {
-        return timeStamp;
-    }
-
-    public int getRecycleCounter() {
-        return recycleCounter;
-    }
-
+    //main constructor
     public RCMFunction(String location, String ID, int capacity) {
         full = false;
         this.location = location;
@@ -51,6 +46,15 @@ public class RCMFunction{
     }
 
     /////////Getters and Setters\\\\\\\\\
+
+    public Date getTimeStamp() {
+        return timeStamp;
+    }
+
+    public int getRecycleCounter() {
+        return recycleCounter;
+    }
+
     public boolean isFull(){
         return full;
     }
@@ -63,6 +67,7 @@ public class RCMFunction{
         return numItems;
     }
 
+    //number of available items that can be recycled
     public int availableItems() {
         return activeRecyclableItems.size();
     }
@@ -96,8 +101,6 @@ public class RCMFunction{
         this.capacity -= itemWeight;
     }
 
-    public USMoney getMaxMoney(){ return maxMoney; }
-
     public USMoney getCurrentMoney() {
         return currentMoney;
     }
@@ -127,14 +130,27 @@ public class RCMFunction{
         return "RCM: " + ID + " in " + location;
     }
 
+    //sets an items price
     public void setRecyclableItemPrices(String key, USMoney price){
         recyclableItemPrices.get(key).setDollars(price.getDollars());
         recyclableItemPrices.get(key).setCents(price.getCents());
     }
 
+    //sets an RCM to active or not active
+    public void setIsActive(boolean b) {
+        this.isActivated = b;
+    }
+
+    //checks whether the RCM is active or not
+    public boolean isActivated() {
+        return isActivated;
+    }
+
     public HashMap<String, USMoney> getRecyclableItemPrices() { return recyclableItemPrices; }
 
     ////////////////////// OPERATION METHODS //////////////////////
+
+    //empties the RCM of all items and sets weight and numItems to 0
     public void empty(){
         weight = 0;
         numItems = 0;
@@ -142,8 +158,6 @@ public class RCMFunction{
         capacity = 500;
         timeStamp = new Date();
     }
-
-    public void refillMoney() { currentMoney = maxMoney; }
 
     //What gets called when an item gets recycled
     public USMoney recycle(ArrayList<RecyclableItem> recyclables) {
@@ -157,7 +171,6 @@ public class RCMFunction{
         recycleCounter++;
         for(RecyclableItem tmp : recyclables){
             tmpWeight = tmp.getWeight();
-
             tmpCost = recyclableItemPrices.get(tmp.getMaterialType()).calculateCost(tmpWeight);
             sub = currentMoney.getDollars() - tmpCost.getDouble();
             if(sub < 0.0){
@@ -185,28 +198,19 @@ public class RCMFunction{
         return sumCost;
     }
 
+    //adds an item to the RCM's list of accepted item
     public void addItem(RecyclableItem x, USMoney value) {
         activeRecyclableItems.add(x);
         recyclableItemPrices.put(x.getMaterialType(),value);
     }
 
+    //removes an item from the RCM's list of accepted items
     public void removeItem(RecyclableItem item, int index) {
         recyclableItemPrices.remove(item.getMaterialType());
         activeRecyclableItems.remove(index);
     }
 
-    public USMoney getItemPrice(String item) {
-        return recyclableItemPrices.get("item");
-    }
-
-    public void setIsActive(boolean b) {
-        this.isActivated = b;
-    }
-
-    public boolean isActivated() {
-        return isActivated;
-    }
-
+    //increments the count for total items and the specific item in the item count hash
     public void incrementItemCount(String key) {
         numItems++;
         if (!itemCounts.containsKey(key)) {
@@ -217,6 +221,7 @@ public class RCMFunction{
         }
     }
 
+    //fetches the item count for a specific item in the item count hash
     public int fetchItemCount(String key) {
         if(itemCounts.containsKey(key)) {
             return itemCounts.get(key);

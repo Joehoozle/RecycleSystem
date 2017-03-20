@@ -7,6 +7,8 @@ import Backend.*;
 
 /**
  * Created by PJ on 3/16/2017.
+ *
+ *  The main class that starts the application
  */
 public class TabbedDisplay extends JPanel{
 

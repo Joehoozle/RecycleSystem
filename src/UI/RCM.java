@@ -49,9 +49,10 @@ public class RCM extends JPanel{
     private JLabel moneyLabel;
     private JLabel disabled;
 
+    private boolean isOn = true;
+
     /////////////////////// CONSTRUCTOR /////////////////////////
     public RCM(RCMFunction mRCM){
-//        super("RCM");
 
         try{
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -130,18 +131,21 @@ public class RCM extends JPanel{
         bg.add(multiple);
         optionPanel.add(single);
         optionPanel.add(multiple);
-
         updateButton = new JButton("UPDATE");
         updateButton.setFont(entryFont);
+
+        //when pressed, the update button updates the RCM (checks if it is active, what items should be represented, ect)
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 updateButtons();
-//                if(!mRCM.isActivated()) {
-//                    activate();
-//                } else {
-//                    deactivate();
-//                }
+                if(mRCM.isActivated() && !isOn ) {
+                    activate();
+                    isOn = true;
+                } else if(!mRCM.isActivated() && isOn) {
+                    deactivate();
+                    isOn = false;
+                }
             }
         });
         optionPanel.add(updateButton);
@@ -153,7 +157,6 @@ public class RCM extends JPanel{
         entryPane.setBackground(Color.decode("#00BCD4"));
         entryPane.setBorder(BorderFactory.createTitledBorder(null,"Select Your Item(s)",
                 TitledBorder.CENTER, TitledBorder.TOP, titleFont));
-
         entryPane.setFont(entryFont);
         container.add(entryPane, BorderLayout.WEST);
 
@@ -216,7 +219,7 @@ public class RCM extends JPanel{
                 TitledBorder.CENTER, TitledBorder.TOP, titleFont));
         container.add(outputPane, BorderLayout.EAST);
 
-        //Money subpanel
+        // Money subpanel
         moneyPanel = new JPanel();
         moneyPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         moneyPanel.setBackground(Color.decode("#00BCD4"));
@@ -240,7 +243,6 @@ public class RCM extends JPanel{
             counterLabels[i].setVisible(false);
             dataPanel.add(counterLabels[i]);
         }
-
         outputPane.add(dataPanel, BorderLayout.CENTER);
 
         //Recycle subpanel
@@ -253,6 +255,8 @@ public class RCM extends JPanel{
         recycleButton.setText("RECYCLE");
         Font recycleFont = new Font("Recycle",Font.BOLD, 40);
         recycleButton.setFont(recycleFont);
+
+        //when clicked, the item enters the recycling process in RCMFunction
         recycleButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
@@ -273,7 +277,7 @@ public class RCM extends JPanel{
     }
 
     ////////////////////// OPERATION METHODS //////////////////////
-    public void activate(){
+    private void activate(){
         recycleButton.setEnabled(true);
         single.setEnabled(true);
         multiple.setEnabled(true);
@@ -283,7 +287,7 @@ public class RCM extends JPanel{
         disabled.setVisible(false);
     }
 
-    public void deactivate(){
+    private void deactivate(){
         recycleButton.setEnabled(false);
         single.setEnabled(false);
         multiple.setEnabled(false);
@@ -300,7 +304,7 @@ public class RCM extends JPanel{
      * they are hidden from view.
      * @param list      list of items accepted by RCMs
      */
-    public void parseActiveItems(ArrayList<RecyclableItem> list){
+    private void parseActiveItems(ArrayList<RecyclableItem> list){
         HashMap<String, USMoney> prices = mRCM.getRecyclableItemPrices();
         for(int i = 0; i < 6;i++) {
             if (i >= list.size()) {
@@ -321,8 +325,10 @@ public class RCM extends JPanel{
         }
     }
 
-    public void updateButtons() {
-        for (int i = 0; i < mRCM.availableItems(); i++) {
+    //updates the RCM button and button label UI when new items are added or items are deleted from the RMOS
+    private void updateButtons() {
+        int i;
+        for (i = 0; i < mRCM.availableItems(); i++) {
             objectButtons[i].setVisible(true);
             objectButtons[i].setText(mRCM.getItemNameByIndex(i));
             objectLabels[i].setText(mRCM.getItemNameByIndex(i) + ": " + mRCM.getRecyclableItemPrices().
@@ -330,9 +336,18 @@ public class RCM extends JPanel{
             counterLabels[i].setVisible(true);
             objectLabels[i].setVisible(true);
         }
+        for(;i<objectButtons.length;i++) {
+            objectButtons[i].setVisible(false);
+            counterLabels[i].setVisible(false);
+            objectLabels[i].setVisible(false);
+
+        }
+        revalidate();
+        repaint();
     }
 
-    public void resetCounterLabels() {
+    //sets counter labels to 0 after a recycle
+    private void resetCounterLabels() {
         for(int i=0;i<objectCounters.length;i++) {
             objectCounters[i] = 0;
             counterLabels[i].setText("0");
@@ -340,7 +355,8 @@ public class RCM extends JPanel{
         }
     }
 
-    public void runningWeight(double weight) {
+    // keeps track of the weight as items are added in a session
+    private void runningWeight(double weight) {
         if(mRCM.getWeight() + weight > mRCM.getCapacity()) {
             JOptionPane.showMessageDialog(null,"The RCM has reached capacity! Session Aborted!","Error",JOptionPane.ERROR_MESSAGE);
             mRCM.setFull(true);
